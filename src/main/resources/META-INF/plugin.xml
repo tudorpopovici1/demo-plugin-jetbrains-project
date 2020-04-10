@@ -11,9 +11,12 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
+    <depends>org.intellij.plugins.markdown</depends>
+
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
     </extensions>
+
 
     <actions>
         <action id="MethodSummary" class="actions.MarkdownAction" text="Markdown Files Report" description="Run markdown files summary report">

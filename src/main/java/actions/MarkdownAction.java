@@ -1,22 +1,32 @@
 package actions;
 
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.pom.Navigatable;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.intellij.psi.tree.IElementType;
+import org.intellij.plugins.markdown.lang.MarkdownElementType;
+import org.intellij.plugins.markdown.lang.MarkdownFileType;
+import org.intellij.plugins.markdown.lang.psi.impl.MarkdownFile;
+import org.intellij.plugins.markdown.lang.psi.impl.MarkdownLinkDestinationImpl;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import static org.intellij.plugins.markdown.lang.MarkdownElementTypes.*;
+import static org.intellij.markdown.flavours.gfm.GFMTokenTypes.*;
+import com.intellij.openapi.diagnostic.Logger;
 
 import javax.swing.*;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Scanner;
+import java.util.Collection;
 
 public class MarkdownAction extends AnAction {
+
+    private static final Logger log = Logger.getInstance(MarkdownAction.class);
 
     /**
      * This default constructor is used by the IntelliJ Platform framework to
@@ -40,62 +50,51 @@ public class MarkdownAction extends AnAction {
         super(text, description, icon);
     }
 
+    int noOfLinks = 0;
+    int noOfFiles = 0;
+    int noOfFIlesWithLinks = 0;
+    boolean linkFound = false;
+
+    /**
+     * TODO deneme
+     * @param event
+     */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-
         Project currentProject = event.getProject();
-        String path = currentProject.getBasePath();
-        File directory = new File(path);
 
-        //find only md files
-        FilenameFilter textFilter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                String lowercaseName = name.toLowerCase();
-                if (lowercaseName.endsWith(".md")) {
-                    return true;
-                } else {
-                    return false;
+        Collection<VirtualFile> virtualFiles =
+                FileTypeIndex.getFiles(MarkdownFileType.INSTANCE, GlobalSearchScope.projectScope(currentProject));
+
+        noOfLinks = 0;
+        noOfFiles = 0;
+        noOfFIlesWithLinks = 0;
+
+        for (VirtualFile virtualFile : virtualFiles) {
+            linkFound = false;
+            noOfFiles++;
+            MarkdownFile psiFile = (MarkdownFile)PsiManager.getInstance(currentProject).findFile(virtualFile);
+            psiFile.accept(new PsiRecursiveElementVisitor() {
+                @Override
+                public void visitElement(PsiElement element) {
+                    IElementType elemType = element.getNode().getElementType();
+                    if ((element.getClass().equals(ASTWrapperPsiElement.class) && elemType == AUTOLINK)
+                            || (element.getClass().equals(MarkdownLinkDestinationImpl.class) && elemType == LINK_DESTINATION)
+                            || (element.getClass().equals(LeafPsiElement.class)
+                            && (elemType == MarkdownElementType.platformType(GFM_AUTOLINK)
+                            && element.getParent().getNode().getElementType() != LINK_DESTINATION))) {
+                        linkFound = true;
+                        noOfLinks++;
+                    }
+                    super.visitElement(element);
                 }
-            }
-        };
-        long fileCount = directory.list(textFilter).length;
-        long lineCount = 0;
-        long wordCount = 0;
-        File[] files = directory.listFiles(textFilter);
-        String msg = "Number of md files: " + fileCount + "\n"
-                + "File names: \n";
-
-        // gets the number of lines and words of all md files
-        for(File f:files) {
-            Path filePath = Paths.get(f.getPath());
-            try {
-                long count = Files.lines(filePath).count();
-                msg += "-" + f.getName() + " (" + count + " lines, ";
-                lineCount += count;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            try (Scanner sc = new Scanner(new FileInputStream(f))) {
-                int count = 0;
-                while (sc.hasNext()) {
-                    sc.next();
-                    count++;
-                }
-                msg += count + " words)\n";
-                wordCount += count;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            });
+            if (linkFound) {
+                noOfFIlesWithLinks++;
             }
         }
 
-        msg += "Total number of lines: " + lineCount + "\n" +
-                "Total number of words: " + wordCount + "\n";
-
-        Navigatable nav = event.getData(CommonDataKeys.NAVIGATABLE);
-        if (nav != null) {
-            msg += String.format("\nSelected Element: %s", nav.toString());
-        }
+        String msg = "No of links : " + noOfLinks + "\nNo of files : " + noOfFiles + "\nNo of files with links : " + noOfFIlesWithLinks;
 
         Messages.showMessageDialog(currentProject, msg, "Markdown Files Report", Messages.getInformationIcon());
     }
