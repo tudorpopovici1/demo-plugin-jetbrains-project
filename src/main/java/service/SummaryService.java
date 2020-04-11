@@ -8,6 +8,8 @@ import com.intellij.openapi.fileEditor.FileEditorManagerAdapter;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.IconLoader;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
@@ -37,6 +39,7 @@ public class SummaryService {
     private ArrayList<SummaryData> lastSummary = new ArrayList<>();
     private Project project;
 
+
     public SummaryService(Project project) {
         logger.info("Summary service is starting");
 
@@ -45,13 +48,14 @@ public class SummaryService {
 
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(
-                "Summary_Test", false, ToolWindowAnchor.BOTTOM);
+                "Statistics", false, ToolWindowAnchor.BOTTOM);
 
-        //toolWindow.setIcon(ICON);
+        toolWindow.setIcon(IconLoader.getIcon("/icons/icon.png"));
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(view, null, true);
         toolWindow.getContentManager().addContent(content);
 
+        // update view when new file is selected
         final MessageBusConnection connection = project.getMessageBus().connect(project);
         connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
             @Override
@@ -60,16 +64,13 @@ public class SummaryService {
             }
         });
 
+        // update view when file is changed
         PsiManager.getInstance(project).addPsiTreeChangeListener(new PsiTreeAnyChangeAbstractAdapter() {
             @Override
             protected void onChange(@Nullable PsiFile psiFile) {
-                ArrayList<SummaryData> newSummary = new ArrayList<>();
                 if (psiFile instanceof PsiJavaFile) {
-                    PsiJavaFile javaFile = (PsiJavaFile) psiFile;
-                    newSummary = getSummary(javaFile);
+                    updateView(psiFile.getProject(), psiFile.getVirtualFile(), false);
                 }
-
-                // TO DO: dynamically changes numbers on changes
             }
         });
     }
@@ -156,11 +157,11 @@ public class SummaryService {
      * Update the view.
      * @param project the currently open project object
      * @param file the file object referring to the document in the currently open editor
-     * @param activate TODO
+     * @param activate check whether the table should be activated or not
      */
     public void updateView(Project project, VirtualFile file, Boolean activate) {
         ArrayList<SummaryData> summaries = new ArrayList<>();
-        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Summary_Test");
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Statistics");
 
         if (file != null) {
             PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
@@ -172,6 +173,10 @@ public class SummaryService {
                     toolWindow.activate(null);
                 }
             } else {
+                Messages.showErrorDialog(
+                        "Non-java files are not supported.",
+                        "Summary Report"
+                );
                 view.updateModel(summaries);
                 toolWindow.hide(null);
             }
