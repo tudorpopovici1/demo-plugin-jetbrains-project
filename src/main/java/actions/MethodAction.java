@@ -13,6 +13,7 @@ import com.intellij.pom.Navigatable;
 import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import service.SummaryService;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -43,90 +44,10 @@ public class MethodAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-
-        // Get context objects
-        Project currentProject = event.getProject();
-        Document currentDoc = FileEditorManager.getInstance(currentProject).getSelectedTextEditor().getDocument();
-        VirtualFile currentFile = FileDocumentManager.getInstance().getFile(currentDoc);
-
-        // Get file info
-        String filePath = currentFile.getPath();
-        String fileName = currentFile.getName();
-        int docLength = currentDoc.getTextLength();
-        int docLines = currentDoc.getLineCount();
-
-        // Get Psi file
-        PsiFile psiFile = PsiDocumentManager.getInstance(currentProject).getPsiFile(currentDoc);
-        // Check if file is Java file, else display warning
-        if (psiFile instanceof PsiJavaFile) {
-
-            // Setup statistics counters
-            int methodCounter = 0;
-            int privateMethodCounter = 0;
-            int publicMethodCounter = 0;
-            ArrayList<String> methodNames = new ArrayList<>();
-
-            PsiClass[] classes = ((PsiJavaFile) psiFile).getClasses();
-            for (PsiClass psiClass: classes) {
-
-                PsiMethod[] methods = psiClass.getMethods();
-                for (PsiMethod method: methods) {
-
-                    methodCounter++;
-                    String methodName = method.getName();
-                    methodNames.add(methodName);
-                    PsiModifierList modifiers = method.getModifierList();
-                    if (modifiers.hasExplicitModifier("public")) { publicMethodCounter++; }
-                    if (modifiers.hasExplicitModifier("private")) { privateMethodCounter++; }
-                }
-            }
-
-            // Build string from list of methods
-            StringBuilder methodsStringBuilder = new StringBuilder();
-            for (int i = 0; i < methodNames.size(); i++) {
-                methodsStringBuilder.append("\t");
-                methodsStringBuilder.append(methodNames.get(i));
-                if (i != methodNames.size() - 1) {
-                    methodsStringBuilder.append(",\n");
-                }
-            }
-
-            // Build final popup text string
-            StringBuffer dlgMsg = new StringBuffer(
-                            "file name: " + fileName + "\n" +
-                            "file path: " +  filePath + "\n" +
-                            "file length: " + docLength + "\n" +
-                            "lines of code: " + docLines + "\n" +
-                            "number of methods: " + methodCounter + "\n" +
-                            "number of public methods: " + publicMethodCounter + "\n" +
-                            "number of private methods: " + privateMethodCounter + "\n" +
-                            "method names:\n" + methodsStringBuilder.toString()
-            );
-
-            // If an element is selected in the editor, add info about it.
-            Navigatable nav = event.getData(CommonDataKeys.NAVIGATABLE);
-            if (nav != null) {
-                dlgMsg.append(String.format("\n\nSelected Element: %s", nav.toString()));
-            }
-            Messages.showMessageDialog(currentProject,
-                    dlgMsg.toString(),
-                    "Summary Report",
-                    Messages.getInformationIcon());
-
-        } else {
-
-            // Build final popup text string
-            StringBuffer dlgMsg = new StringBuffer(
-                            "file name: " + fileName + "\n" +
-                            "file path: " +  filePath + "\n" +
-                            "file length: " + docLength + "\n" +
-                            "lines of code: " + docLines + "\n\n" +
-                            "We're sorry, but method statistics are currently only available for Java files :(");
-            Messages.showMessageDialog(currentProject,
-                    dlgMsg.toString(),
-                    "Summary Report",
-                    Messages.getInformationIcon());
-        }
+        Project project = event.getProject();
+        VirtualFile file = FileEditorManager.getInstance(project).getSelectedEditor().getFile();
+        SummaryService summaryService = SummaryService.getInstance(project);
+        summaryService.updateView(project, file, true);
     }
 
     @Override
