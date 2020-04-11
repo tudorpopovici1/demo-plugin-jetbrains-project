@@ -3,7 +3,7 @@
     <name>Summary tool</name>
     <vendor email="alextudor99@gmail.com">Tu Delft Student Group</vendor>
 
-    <description>Toy plugin meant to provide a short summary of the markdown files in the project </description>
+    <description>Toy plugin meant to provide a short summary of the methods inside of an open file </description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -15,11 +15,21 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <projectService serviceImplementation="service.SummaryService"/>
+        <projectService serviceImplementation="service.MarkdownService"/>
     </extensions>
 
-
     <actions>
-        <action id="MethodSummary" class="actions.MarkdownAction" text="Markdown Files Report" description="Run markdown files summary report">
+        <action id="MethodSummary" class="actions.MethodAction" text="Summary Report" description="Run method summary report">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="control alt G" second-keystroke="C"/>
+            <!-- Except to the "Mac OS X" keymap and its children -->
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="control alt G" second-keystroke="C" remove="true"/>
+            <!-- The "Mac OS X 10.5+" keymap and its children will have only this keyboard shortcut for this action.  -->
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control alt G" second-keystroke="C" replace-all="true"/>
+            <mouse-shortcut keymap="$default" keystroke="control button3 doubleClick"/>
+        </action>
+        <action id="MarkdownSummary" class="actions.MarkdownAction" text="Markdown Files Report" description="Run markdown files summary report">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="control alt G" second-keystroke="C"/>
             <!-- Except to the "Mac OS X" keymap and its children -->

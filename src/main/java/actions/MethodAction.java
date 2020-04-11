@@ -8,16 +8,11 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import org.intellij.plugins.markdown.lang.MarkdownFileType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import service.MarkdownService;
 import service.SummaryService;
 
 import javax.swing.*;
-import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -25,7 +20,11 @@ import java.util.Objects;
  * @author Tommaso Brandirali
  * An action that displays a set of statistics about methods in the currently open editor.
  */
-public class MarkdownAction extends AnAction {
+public class MethodAction extends AnAction {
+
+
+    private static final int COMPLEXITY_LEVEL_MILD_WARNING = 7;
+    private static final int COMPLEXITY_LEVEL_SERIOUS_WARNING = 10;
 
     /**
      * This default constructor is used by the IntelliJ Platform framework to
@@ -33,7 +32,7 @@ public class MarkdownAction extends AnAction {
      * class because a second constructor is overridden.
      * @see AnAction#AnAction()
      */
-    public MarkdownAction() {
+    public MethodAction() {
         super();
     }
 
@@ -45,7 +44,7 @@ public class MarkdownAction extends AnAction {
      * @param description  The description of the menu item.
      * @param icon  The icon to be used with the menu item.
      */
-    public MarkdownAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
+    public MethodAction(@Nullable String text, @Nullable String description, @Nullable Icon icon) {
         super(text, description, icon);
     }
 
@@ -60,19 +59,28 @@ public class MarkdownAction extends AnAction {
         Project currentProject = event.getProject();
         if (currentProject == null) {
             Messages.showErrorDialog(
-                    "Please open a project to see the Markdown Files Report.",
-                    "Markdown Files Report");
+                    "Please open a project to see the Summary Report.",
+                    "Summary Report");
             return;
         }
 
-        // Get virtual files
-        Collection<VirtualFile> virtualFiles =
-                FileTypeIndex.getFiles(MarkdownFileType.INSTANCE, GlobalSearchScope.projectScope(currentProject));
+        // Return warning if no file open.
+        if (FileEditorManager.getInstance(currentProject).getSelectedEditor() == null) {
+            Messages.showErrorDialog(
+                    "Please open a file to see the Summary Report.",
+                    "Summary Report"
+            );
+            return;
+        }
 
+        // Get current file.
+        Document currentDoc = Objects.requireNonNull(FileEditorManager.getInstance(currentProject)
+                .getSelectedTextEditor()).getDocument();
+        VirtualFile currentFile = FileDocumentManager.getInstance().getFile(currentDoc);
 
-        // Update markdown service view.
-        MarkdownService markdownService = MarkdownService.getInstance(currentProject);
-        markdownService.updateView(currentProject, virtualFiles);
+        // Update summary service view.
+        SummaryService summaryService = SummaryService.getInstance(currentProject);
+        summaryService.updateView(currentProject, currentFile, true);
     }
 
     /**
