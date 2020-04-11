@@ -16,12 +16,16 @@ import com.intellij.psi.*;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBusConnection;
+import data.FileStatistics;
+import data.MethodStatistics;
 import data.SummaryData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import util.DataConverter;
 import view.SummaryView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class SummaryService {
 
@@ -37,7 +41,9 @@ public class SummaryService {
         }
 
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow toolWindow = toolWindowManager.registerToolWindow("Summary_Test", false, ToolWindowAnchor.BOTTOM);
+        ToolWindow toolWindow = toolWindowManager.registerToolWindow(
+                "Summary_Test", false, ToolWindowAnchor.BOTTOM);
+
         //toolWindow.setIcon(ICON);
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(view, null, true);
@@ -65,66 +71,32 @@ public class SummaryService {
         });
     }
 
-    public ArrayList<SummaryData> getSummary (PsiJavaFile javaFile) {
-        ArrayList<SummaryData> summaries = new ArrayList<>();
-        Document doc = FileEditorManager.getInstance(javaFile.getProject()).getSelectedTextEditor().getDocument();
+    /**
+     * This method executes the data gathering logic and refactors the data
+     * to prepare it for being passed to he view.
+     * @param psiFile the psi object
+     * @return a list of SummaryData entries
+     */
+    public ArrayList<SummaryData> getSummary (PsiJavaFile psiFile) {
 
-        // Get file info
-        String name = javaFile.getName();
-        int fileLength = javaFile.getTextLength();
-        int noLines = doc.getLineCount();
+        // Get document object and generate statistics object.
+        Document document = Objects.requireNonNull(FileEditorManager.getInstance(psiFile.getProject())
+                .getSelectedTextEditor()).getDocument();
+        FileStatistics myFileStatistics = new FileStatistics(psiFile.getName(), document);
 
-        // Setup method counters
-        int methodCounter = 0;
-        int privateMethodCounter = 0;
-        int publicMethodCounter = 0;
-        int staticMethodCounter = 0;
-        int finalMethodCounter = 0;
+        // Execute data gathering logic.
+        visitMethods(psiFile, myFileStatistics);
 
-        // Setup field counters
-        int fieldCounter = 0;
-        int privateFieldCounter = 0;
-        int publicFieldCounter = 0;
-        int staticFieldCounter = 0;
-        int finalFieldCounter = 0;
-
-        PsiClass[] classes = javaFile.getClasses();
-        for (PsiClass psiClass: classes) {
-            PsiField[] fields = psiClass.getAllFields();
-            PsiMethod[] methods = psiClass.getMethods();
-            for (PsiMethod method: methods) {
-                methodCounter++;
-                PsiModifierList modifiers = method.getModifierList();
-                if (modifiers.hasExplicitModifier("public")) { publicMethodCounter++; }
-                if (modifiers.hasExplicitModifier("private")) { privateMethodCounter++; }
-                if (modifiers.hasExplicitModifier("static")) { staticMethodCounter++; }
-                if (modifiers.hasExplicitModifier("final")) { finalMethodCounter++; }
-            }
-            for (PsiField field: fields) {
-                fieldCounter++;
-                PsiModifierList modifiers = field.getModifierList();
-                if (modifiers.hasExplicitModifier("public")) { publicFieldCounter++; }
-                if (modifiers.hasExplicitModifier("private")) { privateFieldCounter++; }
-                if (modifiers.hasExplicitModifier("static")) { staticFieldCounter++; }
-                if (modifiers.hasExplicitModifier("final")) { finalFieldCounter++; }
-            }
-        }
-        summaries.add(new SummaryData("Name", name));
-        summaries.add(new SummaryData("No of lines", noLines + ""));
-        summaries.add(new SummaryData("File length", fileLength + ""));
-        summaries.add(new SummaryData("No of methods", methodCounter + ""));
-        summaries.add(new SummaryData("No of public methods", publicMethodCounter + ""));
-        summaries.add(new SummaryData("No of private methods", privateMethodCounter + ""));
-        summaries.add(new SummaryData("No of static methods", staticMethodCounter + ""));
-        summaries.add(new SummaryData("No of final methods", finalMethodCounter + ""));
-        summaries.add(new SummaryData("No of fields", fieldCounter + ""));
-        summaries.add(new SummaryData("No of public fields", publicFieldCounter + ""));
-        summaries.add(new SummaryData("No of private fields", privateFieldCounter + ""));
-        summaries.add(new SummaryData("No of static fields", staticFieldCounter + ""));
-        summaries.add(new SummaryData("No of final fields", finalFieldCounter + ""));
-        return summaries;
+        // Convert data to summary format.
+        return DataConverter.fileStatisticsToSummaryData(myFileStatistics);
     }
 
+    /**
+     * Update the view.
+     * @param project the currently open project object
+     * @param file the file object referring to the document in the currently open editor
+     * @param activate TODO
+     */
     public void updateView(Project project, VirtualFile file, Boolean activate) {
         ArrayList<SummaryData> summaries = new ArrayList<>();
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Summary_Test");
@@ -150,5 +122,26 @@ public class SummaryService {
 
     public static SummaryService getInstance(@NotNull Project project) {
         return ServiceManager.getService(project, SummaryService.class);
+    }
+
+    /**
+     * Helper method to get current document's methods from the psi,
+     * and update the statistics input object with results.
+     * @param psiFile the Psi object representing the current file.
+     * @param stats the statistics object to fill with data during scan.
+     */
+    private void visitMethods(PsiFile psiFile, FileStatistics stats) {
+
+        PsiClass[] classes = ((PsiJavaFile) psiFile).getClasses();
+        for (PsiClass psiClass: classes) {
+
+            PsiMethod[] methods = psiClass.getMethods();
+            for (PsiMethod method: methods) {
+
+                MethodStatistics methodStatistics = new MethodStatistics(method);
+                method.accept(new JavaRecursiveMethodVisitor(methodStatistics));
+                stats.addMethod(methodStatistics);
+            }
+        }
     }
 }

@@ -2,23 +2,29 @@ package actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.pom.Navigatable;
-import com.intellij.psi.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import service.SummaryService;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import java.util.Objects;
 
+/**
+ * @author Irem Ugurlu
+ * @author Tommaso Brandirali
+ * An action that displays a set of statistics about methods in the currently open editor.
+ */
 public class MethodAction extends AnAction {
+
+
+    private static final int COMPLEXITY_LEVEL_MILD_WARNING = 7;
+    private static final int COMPLEXITY_LEVEL_SERIOUS_WARNING = 10;
 
     /**
      * This default constructor is used by the IntelliJ Platform framework to
@@ -42,14 +48,45 @@ public class MethodAction extends AnAction {
         super(text, description, icon);
     }
 
+    /**
+     * This method executes the plugin logic and displays the results in a popup window.
+     * @param event the event object
+     */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        Project project = event.getProject();
-        VirtualFile file = FileEditorManager.getInstance(project).getSelectedEditor().getFile();
-        SummaryService summaryService = SummaryService.getInstance(project);
-        summaryService.updateView(project, file, true);
+
+        // Get project, return warning message if no project open.
+        Project currentProject = event.getProject();
+        if (currentProject == null) {
+            Messages.showErrorDialog(
+                    "Please open a project to see the Summary Report.",
+                    "Summary Report");
+            return;
+        }
+
+        // Return warning if no file open.
+        if (FileEditorManager.getInstance(currentProject).getSelectedEditor() == null) {
+            Messages.showErrorDialog(
+                    "Please open a file to see the Summary Report.",
+                    "Summary Report"
+            );
+            return;
+        }
+
+        // Get current file.
+        Document currentDoc = Objects.requireNonNull(FileEditorManager.getInstance(currentProject)
+                .getSelectedTextEditor()).getDocument();
+        VirtualFile currentFile = FileDocumentManager.getInstance().getFile(currentDoc);
+
+        // Update summary service view.
+        SummaryService summaryService = SummaryService.getInstance(currentProject);
+        summaryService.updateView(currentProject, currentFile, true);
     }
 
+    /**
+     * This method sets the visibility of the action.
+     * @param e the event object
+     */
     @Override
     public void update(AnActionEvent e) {
         Project project = e.getProject();
