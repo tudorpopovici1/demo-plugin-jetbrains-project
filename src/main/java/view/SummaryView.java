@@ -8,15 +8,20 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * Class creating plugin view
+ */
 public class SummaryView extends JPanel {
 
     private JBTable table;
     private DefaultTableModel model;
 
+    /**
+     * Constructor of class
+     */
     public SummaryView() {
         super();
         table = new JBTable();
@@ -31,6 +36,10 @@ public class SummaryView extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
+    /**
+     * Updating table
+     * @param summaries list including statistics
+     */
     public void updateModel(List<SummaryData> summaries) {
         int noOfRows = model.getRowCount();
         for (int i = 0; i < noOfRows; i++) {
@@ -42,6 +51,5 @@ public class SummaryView extends JPanel {
             row.add(summary.getValue());
             model.addRow(row);
         }
-
     }
 }
