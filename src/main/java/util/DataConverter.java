@@ -34,9 +34,22 @@ public class DataConverter {
         summaries.add(new SummaryData("No of static methods", stats.getStaticMethods() + ""));
         summaries.add(new SummaryData("Average cyclomatic complexity",
                 df.format(stats.getAverageComplexity()) + ""));
-        summaries.add(new SummaryData("No of new lines (since action last run)", stats.getNewLines() + ""));
-        summaries.add(new SummaryData("No of new methods (since action last run)", stats.getNewMethods() + ""));
-        summaries.add(new SummaryData("No of new characters (since action last run)", stats.getNewFileLength() + ""));
+        if (stats.getNewLines() < 0) {
+            summaries.add(new SummaryData("No of deleted lines (since action last run)", -stats.getNewLines() + ""));
+
+        } else {
+            summaries.add(new SummaryData("No of new lines (since action last run)", stats.getNewLines() + ""));
+        }
+        if (stats.getNewFileLength() < 0) {
+            summaries.add(new SummaryData("No of deleted characters (since action last run)", -stats.getNewFileLength() + ""));
+        } else {
+            summaries.add(new SummaryData("No of new characters (since action last run)", stats.getNewFileLength() + ""));
+        }
+        if (stats.getNewMethods() < 0) {
+            summaries.add(new SummaryData("No of deleted methods (since action last run)", -stats.getNewMethods() + ""));
+        } else {
+            summaries.add(new SummaryData("No of new methods (since action last run)", stats.getNewMethods() + ""));
+        }
 
         return summaries;
     }

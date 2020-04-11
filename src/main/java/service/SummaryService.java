@@ -211,6 +211,9 @@ public class SummaryService {
             }
         }
         // calculate average complexity
-        return builder.calculateAverageComplexity();
+        if (builder.getTotalMethods() > 0) {
+            return builder.calculateAverageComplexity();
+        }
+        return builder;
     }
 }
