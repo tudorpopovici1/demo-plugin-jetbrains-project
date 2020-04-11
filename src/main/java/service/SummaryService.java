@@ -43,6 +43,7 @@ public class SummaryService {
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(
                 "Summary_Test", false, ToolWindowAnchor.BOTTOM);
+
         //toolWindow.setIcon(ICON);
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(view, null, true);
