@@ -7,11 +7,18 @@
 
     <depends>org.intellij.plugins.markdown</depends>
 
+    <application-components>
+        <component>
+            <implementation-class>service.FileStatisticsService</implementation-class>
+        </component>
+    </application-components>
+
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <projectService serviceImplementation="service.SummaryService"/>
         <projectService serviceImplementation="service.MarkdownService"/>
     </extensions>
+
 
     <actions>
         <action id="MethodSummary" class="actions.MethodAction" text="Summary Report" description="Run method summary report">

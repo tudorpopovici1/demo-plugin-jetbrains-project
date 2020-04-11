@@ -42,7 +42,6 @@ public class SummaryService {
     private ArrayList<SummaryData> lastSummary = new ArrayList<>();
     private Project project;
 
-
     /**
      * Class constructor
      * @param project current project
