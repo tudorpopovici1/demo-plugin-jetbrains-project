@@ -34,7 +34,7 @@ public class DataConverter {
         summaries.add(new SummaryData("No of private methods", stats.getPrivateMethods() + ""));
         summaries.add(new SummaryData("No of static methods", stats.getStaticMethods() + ""));
         summaries.add(new SummaryData("Average cyclomatic complexity",
-                df.format(stats.getAvgComplexity() + "")));
+                df.format(stats.getAvgComplexity()) + ""));
 
         return summaries;
     }
