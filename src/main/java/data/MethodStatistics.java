@@ -1,4 +1,4 @@
-package actions.methodAction;
+package data;
 
 import com.intellij.psi.PsiMethod;
 import com.sun.istack.NotNull;

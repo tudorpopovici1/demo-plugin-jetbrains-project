@@ -13,10 +13,11 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
+        <projectService serviceImplementation="service.SummaryService"/>
     </extensions>
 
     <actions>
-        <action id="MethodSummary" class="actions.methodAction.MethodAction" text="Summary Report" description="Run method summary report">
+        <action id="MethodSummary" class="actions.MethodAction" text="Summary Report" description="Run method summary report">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="control alt G" second-keystroke="C"/>
             <!-- Except to the "Mac OS X" keymap and its children -->
