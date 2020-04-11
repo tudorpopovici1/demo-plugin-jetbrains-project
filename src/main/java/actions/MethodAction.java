@@ -10,6 +10,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import service.FileStatisticsService;
 import service.SummaryService;
 
 import javax.swing.*;
@@ -73,14 +74,18 @@ public class MethodAction extends AnAction {
             return;
         }
 
+        // Get the persistent storage service for file statistics
+        final FileStatisticsService fileStatisticsService = FileStatisticsService.getInstance();
+
         // Get current file.
         Document currentDoc = Objects.requireNonNull(FileEditorManager.getInstance(currentProject)
                 .getSelectedTextEditor()).getDocument();
         VirtualFile currentFile = FileDocumentManager.getInstance().getFile(currentDoc);
 
-        // Update summary service view.
+        // Update summary service view and save statistics of the file on disk.
         SummaryService summaryService = SummaryService.getInstance(currentProject);
         summaryService.updateView(currentProject, currentFile, true);
+        summaryService.save(currentFile);
     }
 
     /**

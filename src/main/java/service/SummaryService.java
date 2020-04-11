@@ -19,25 +19,29 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBusConnection;
 import data.FileStatistics;
+import data.FileStatistics.FileStatisticsBuilder;
 import data.MethodStatistics;
 import data.SummaryData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import util.DataAggregator;
 import util.DataConverter;
 import view.SummaryView;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * @author Ceren Ugurlu
- *
  * Service for Summary Report plugin
  */
 public class SummaryService {
 
-    final static Logger logger = Logger.getInstance(SummaryService.class);
+    private final static Logger logger = Logger.getInstance(SummaryService.class);
 
-    SummaryView view;
+    private SummaryView view;
+    private ArrayList<SummaryData> lastSummary = new ArrayList<>();
+    private Project project;
+
 
     /**
      * Class constructor
@@ -45,9 +49,9 @@ public class SummaryService {
      */
     public SummaryService(Project project) {
         logger.info("Summary service is starting");
-        if (view == null) {
-            view = new SummaryView();
-        }
+
+        view = new SummaryView();
+        this.project = project;
 
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(
@@ -80,22 +84,80 @@ public class SummaryService {
 
     /**
      * This method executes the data gathering logic and refactors the data
-     * to prepare it for being passed to he view.
+     * to prepare it for being passed to the view.
      * @param psiFile the psi object
      * @return a list of SummaryData entries
      */
-    public ArrayList<SummaryData> getSummary (PsiJavaFile psiFile) {
+    private ArrayList<SummaryData> getSummary(PsiJavaFile psiFile) {
+
+        // Convert data to summary format.
+        return DataConverter.fileStatisticsToSummaryData(this.buildFileStatistics(psiFile));
+    }
+
+    /**
+     * Higher-level function that builds the FileStatistics object
+     *
+     * @param psiFile file for which to collect statistics
+     * @return FileStatistics object
+     */
+    private FileStatistics buildFileStatistics(PsiFile psiFile) {
+        FileStatisticsBuilder builder = this.buildWithCurrentData(psiFile);
+        return buildWithStorageData(builder, psiFile.getName()).build();
+    }
+
+    /**
+     * Helper function that performs the first part of building the FileStatistics object
+     * This function adds to the FileStatistics object the 'current' fetched statistics
+     *
+     * @param psiFile file for which to collect 'current' statistics
+     * @return FileStatistics builder object containing 'current' statistics
+     */
+    private FileStatisticsBuilder buildWithCurrentData(PsiFile psiFile) {
+
+        FileStatisticsBuilder builder = new FileStatisticsBuilder();
 
         // Get document object and generate statistics object.
         Document document = Objects.requireNonNull(FileEditorManager.getInstance(psiFile.getProject())
                 .getSelectedTextEditor()).getDocument();
-        FileStatistics myFileStatistics = new FileStatistics(psiFile.getName(), document);
+        builder.addName(psiFile.getName())
+                .withDocument(document)
+                .withLines(document.getLineCount())
+                .withFileLength(document.getTextLength());
 
         // Execute data gathering logic.
-        visitMethods(psiFile, myFileStatistics);
+        return visitMethods(psiFile, builder);
+    }
 
-        // Convert data to summary format.
-        return DataConverter.fileStatisticsToSummaryData(myFileStatistics);
+
+    /**
+     * Helper function that performs the second part of building the FileStatistics object
+     * This function adds to the FileStatistics object the aggregated statistics using disk data.
+     *
+     * @param builder FileStatisticsBuilder object on top of which to add the new storage statistics
+     * @param name name of the file for which to aggregate the data
+     * @return a new FileStatisticsBuilder object containing the 'storage' statistics.
+     */
+    private FileStatisticsBuilder buildWithStorageData(FileStatisticsBuilder builder, String name) {
+        DataAggregator dataAggregator = new DataAggregator(project.getName(), name);
+        return dataAggregator.collectStorageData(builder);
+    }
+
+    /**
+     * Saves the file statistics of a JAVA file on disk.
+     *
+     * @param file file object for which to store the statistics on disk.
+     */
+    public void save(VirtualFile file) {
+        final FileStatisticsService fileStatisticsService = FileStatisticsService.getInstance();
+        if (file != null) {
+            PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
+            if (psiFile instanceof PsiJavaFile) {
+                fileStatisticsService.saveStatistics(this.project.getName(), this.buildFileStatistics(psiFile));
+            } else {
+                // TODO: Save statistics for other types of files
+            }
+        }
+
     }
 
     /**
@@ -137,11 +199,12 @@ public class SummaryService {
 
     /**
      * Helper method to get current document's methods from the psi,
-     * and update the statistics input object with results.
+     * and update the statistics builder object with results.
+     *
      * @param psiFile the Psi object representing the current file.
-     * @param stats the statistics object to fill with data during scan.
+     * @param builder the builder for the statistics object to fill with data during scan.
      */
-    private void visitMethods(PsiFile psiFile, FileStatistics stats) {
+    private FileStatisticsBuilder visitMethods(PsiFile psiFile, FileStatisticsBuilder builder) {
 
         PsiClass[] classes = ((PsiJavaFile) psiFile).getClasses();
         for (PsiClass psiClass: classes) {
@@ -151,8 +214,10 @@ public class SummaryService {
 
                 MethodStatistics methodStatistics = new MethodStatistics(method);
                 method.accept(new JavaRecursiveMethodVisitor(methodStatistics));
-                stats.addMethod(methodStatistics);
+                builder.addMethod(methodStatistics);
             }
         }
+        // calculate average complexity
+        return builder.calculateAverageComplexity();
     }
 }

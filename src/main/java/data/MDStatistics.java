@@ -118,32 +118,32 @@ public class MDStatistics {
                 public void visitElement(PsiElement element) {
                     IElementType elemType = element.getNode().getElementType();
 
-                       //finds links by looking at right element types in a markdown file
-                       if ((element.getClass().equals(ASTWrapperPsiElement.class) && elemType == AUTOLINK)
-                               || (element.getClass().equals(MarkdownLinkDestinationImpl.class) && elemType == LINK_DESTINATION)
-                               || (element.getClass().equals(LeafPsiElement.class)
-                               && (elemType == MarkdownElementType.platformType(GFM_AUTOLINK)
-                               && element.getParent().getNode().getElementType() != LINK_DESTINATION))) {
-                           linkFound = true;
-                           noLinks++;
-                           if((element.getClass().equals(MarkdownLinkDestinationImpl.class) && elemType == LINK_DESTINATION)) {
-                               if(element.getFirstChild().getNode().getElementType()==TEXT){
-                                   repoReferences.add(element.getText());
-                                   noRepoLinks++;
-                               } else { urls.add(element.getText()); noUrls++; }
-                           } else { urls.add(element.getText());noUrls++; }
-                       }
+                    //finds links by looking at right element types in a markdown file
+                    if ((element.getClass().equals(ASTWrapperPsiElement.class) && elemType == AUTOLINK)
+                            || (element.getClass().equals(MarkdownLinkDestinationImpl.class) && elemType == LINK_DESTINATION)
+                            || (element.getClass().equals(LeafPsiElement.class)
+                            && (elemType == MarkdownElementType.platformType(GFM_AUTOLINK)
+                            && element.getParent().getNode().getElementType() != LINK_DESTINATION))) {
+                        linkFound = true;
+                        noLinks++;
+                        if((element.getClass().equals(MarkdownLinkDestinationImpl.class) && elemType == LINK_DESTINATION)) {
+                            if(element.getFirstChild().getNode().getElementType()==TEXT){
+                                repoReferences.add(element.getText());
+                                noRepoLinks++;
+                            } else { urls.add(element.getText()); noUrls++; }
+                        } else { urls.add(element.getText());noUrls++; }
+                    }
 
-                       // counts headers
-                       if(elemType == ATX_HEADER) { noHeaders++; }
+                    // counts headers
+                    if(elemType == ATX_HEADER) { noHeaders++; }
 
-                       List<List<String>> links = new ArrayList<>();
-                       links.add(urls);
-                       links.add(repoReferences);
+                    List<List<String>> links = new ArrayList<>();
+                    links.add(urls);
+                    links.add(repoReferences);
 
-                       values.put(fileName, links);
-                       logger.info(values.toString());
-                       super.visitElement(element);
+                    values.put(fileName, links);
+                    logger.info(values.toString());
+                    super.visitElement(element);
                 }
             });
 

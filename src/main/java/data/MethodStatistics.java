@@ -15,34 +15,47 @@ public class MethodStatistics {
      * The method object referenced by this instance.
      */
     @NotNull
-    private final PsiMethod myMethod;
+    private PsiMethod method;
 
     public PsiMethod getMethod() {
-        return myMethod;
+        return method;
     }
 
     /**
      * The name of the method.
      */
     @NotNull
-    private final String myName;
+    private String name;
 
     public String getName(){
-        return myName;
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
      * The cyclomatic complexity of
      */
-    private int myComplexity;
+    private int complexity;
 
     public int getComplexity() {
-        return myComplexity;
+        return complexity;
+    }
+
+    public void setComplexity(int complexity) {
+        this.complexity = complexity;
     }
 
     public void incrementComplexity() {
-        myComplexity++;
+        complexity++;
     }
+
+    /**
+     * Empty constructor of MethodStatistics
+     */
+    public MethodStatistics() {}
 
     /**
      * Constructs an instance of MethodStatistics.
@@ -50,8 +63,8 @@ public class MethodStatistics {
      */
     public MethodStatistics(PsiMethod method) {
 
-        myMethod = method;
-        myName = method.getName();
-        myComplexity = 1;
+        this.method = method;
+        this.name = method.getName();
+        this.complexity = 1;
     }
 }
