@@ -2,17 +2,26 @@ package actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
+import com.intellij.psi.PsiManager;
+import data.FileStatistics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import service.FileStatisticsService;
 import service.SummaryService;
+import util.DataAggregator;
 
 import javax.swing.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -73,14 +82,18 @@ public class MethodAction extends AnAction {
             return;
         }
 
+        // Get the persistent storage service for file statistics
+        final FileStatisticsService fileStatisticsService = FileStatisticsService.getInstance();
+
         // Get current file.
         Document currentDoc = Objects.requireNonNull(FileEditorManager.getInstance(currentProject)
                 .getSelectedTextEditor()).getDocument();
         VirtualFile currentFile = FileDocumentManager.getInstance().getFile(currentDoc);
 
-        // Update summary service view.
+        // Update summary service view and save statistics of the file on disk.
         SummaryService summaryService = SummaryService.getInstance(currentProject);
         summaryService.updateView(currentProject, currentFile, true);
+        summaryService.save(currentFile);
     }
 
     /**

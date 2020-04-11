@@ -22,19 +22,21 @@ public class DataConverter {
      */
     public static ArrayList<SummaryData> fileStatisticsToSummaryData(FileStatistics stats) {
 
-        Document document = stats.getDocument();
         ArrayList<SummaryData> summaries = new ArrayList<>();
         DecimalFormat df = new DecimalFormat(DECIMAL_ROUNDING_FORMAT);
 
         summaries.add(new SummaryData("Name", stats.getName()));
-        summaries.add(new SummaryData("No of lines", document.getLineCount() + ""));
-        summaries.add(new SummaryData("File length", document.getTextLength() + ""));
+        summaries.add(new SummaryData("No of lines", stats.getLines() + ""));
+        summaries.add(new SummaryData("File length", stats.getFileLength() + ""));
         summaries.add(new SummaryData("No of methods", stats.getTotalMethods() + ""));
         summaries.add(new SummaryData("No of public methods", stats.getPublicMethods() + ""));
         summaries.add(new SummaryData("No of private methods", stats.getPrivateMethods() + ""));
         summaries.add(new SummaryData("No of static methods", stats.getStaticMethods() + ""));
         summaries.add(new SummaryData("Average cyclomatic complexity",
-                df.format(stats.getAvgComplexity()) + ""));
+                df.format(stats.getAverageComplexity()) + ""));
+        summaries.add(new SummaryData("No of new lines (since action last run)", stats.getNewLines() + ""));
+        summaries.add(new SummaryData("No of new methods (since action last run)", stats.getNewMethods() + ""));
+        summaries.add(new SummaryData("No of new characters (since action last run)", stats.getNewFileLength() + ""));
 
         return summaries;
     }

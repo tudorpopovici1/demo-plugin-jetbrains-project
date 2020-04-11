@@ -11,10 +11,17 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
+    <application-components>
+        <component>
+            <implementation-class>service.FileStatisticsService</implementation-class>
+        </component>
+    </application-components>
+
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <projectService serviceImplementation="service.SummaryService"/>
     </extensions>
+
 
     <actions>
         <action id="MethodSummary" class="actions.MethodAction" text="Summary Report" description="Run method summary report">
