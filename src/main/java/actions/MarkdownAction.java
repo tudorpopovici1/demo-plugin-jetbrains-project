@@ -22,7 +22,7 @@ import java.util.Objects;
 
 /**
  * @author Irem Ugurlu
- * @author Tommaso Brandirali
+ * @author Ceren Ugurlu
  * An action that displays a set of statistics about methods in the currently open editor.
  */
 public class MarkdownAction extends AnAction {

@@ -25,16 +25,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.DataConverter;
 import view.SummaryView;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * @author Ceren Ugurlu
+ *
+ * Service for Summary Report plugin
+ */
 public class SummaryService {
 
     final static Logger logger = Logger.getInstance(SummaryService.class);
 
     SummaryView view;
 
+    /**
+     * Class constructor
+     * @param project current project
+     */
     public SummaryService(Project project) {
         logger.info("Summary service is starting");
         if (view == null) {

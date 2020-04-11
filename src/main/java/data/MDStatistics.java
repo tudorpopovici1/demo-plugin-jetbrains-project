@@ -1,6 +1,7 @@
 package data;
 
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
@@ -9,10 +10,9 @@ import com.intellij.psi.tree.IElementType;
 import org.intellij.plugins.markdown.lang.MarkdownElementType;
 import org.intellij.plugins.markdown.lang.psi.impl.MarkdownFile;
 import org.intellij.plugins.markdown.lang.psi.impl.MarkdownLinkDestinationImpl;
+import service.SummaryService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.intellij.markdown.flavours.gfm.GFMTokenTypes.GFM_AUTOLINK;
 import static org.intellij.plugins.markdown.lang.MarkdownElementTypes.AUTOLINK;
@@ -21,12 +21,14 @@ import static org.intellij.plugins.markdown.lang.MarkdownTokenTypes.ATX_HEADER;
 import static org.intellij.plugins.markdown.lang.MarkdownTokenTypes.TEXT;
 
 /**
- * @author Tommaso Brandirali
+ * @author Irem Ugurlu
  *
  * A data class to hold partial and final values
  * of statistics about all MD files.
  */
 public class MDStatistics {
+
+    final static Logger logger = Logger.getInstance(SummaryService.class);
 
     /**
      * Total number of links.
@@ -82,27 +84,32 @@ public class MDStatistics {
         return noHeaders;
     }
 
+    /**
+     * The map of files and their references and links
+     */
+    private Map<String, List<List<String>>> values;
+    public Map<String, List<List<String>>> getValues() {
+        return values;
+    }
+
     boolean linkFound = false;
 
     /**
-     * The list of repository references
+     * Method updating statistics
+     * @param currentProject current project
+     * @param virtualFiles collection of all virtual files
      */
-    List<String> repoReferences;
-
-    /**
-     * The list of urls.
-     */
-    List<String> urls;
-
-
     public void updateStatistics(Project currentProject, Collection<VirtualFile> virtualFiles) {
 
         // gets each md file and gathers statistics
         for (VirtualFile virtualFile : virtualFiles) {
+            List<String> repoReferences = new ArrayList<>();
+            List<String> urls = new ArrayList<>();
             linkFound = false;
             noFiles++;
+            String fileName = virtualFile.getName();
 
-            MarkdownFile psiFile = (MarkdownFile) PsiManager.getInstance(currentProject).findFile(virtualFile);
+            MarkdownFile psiFile = (MarkdownFile)PsiManager.getInstance(currentProject).findFile(virtualFile);
 
             noLines += psiFile.getText().split("\r\n|\r|\n").length;
 
@@ -111,26 +118,32 @@ public class MDStatistics {
                 public void visitElement(PsiElement element) {
                     IElementType elemType = element.getNode().getElementType();
 
-                    //finds links by looking at right element types in a markdown file
-                    if ((element.getClass().equals(ASTWrapperPsiElement.class) && elemType == AUTOLINK)
-                            || (element.getClass().equals(MarkdownLinkDestinationImpl.class) && elemType == LINK_DESTINATION)
-                            || (element.getClass().equals(LeafPsiElement.class)
-                            && (elemType == MarkdownElementType.platformType(GFM_AUTOLINK)
-                            && element.getParent().getNode().getElementType() != LINK_DESTINATION))) {
-                        linkFound = true;
-                        noLinks++;
+                       //finds links by looking at right element types in a markdown file
+                       if ((element.getClass().equals(ASTWrapperPsiElement.class) && elemType == AUTOLINK)
+                               || (element.getClass().equals(MarkdownLinkDestinationImpl.class) && elemType == LINK_DESTINATION)
+                               || (element.getClass().equals(LeafPsiElement.class)
+                               && (elemType == MarkdownElementType.platformType(GFM_AUTOLINK)
+                               && element.getParent().getNode().getElementType() != LINK_DESTINATION))) {
+                           linkFound = true;
+                           noLinks++;
+                           if((element.getClass().equals(MarkdownLinkDestinationImpl.class) && elemType == LINK_DESTINATION)) {
+                               if(element.getFirstChild().getNode().getElementType()==TEXT){
+                                   repoReferences.add(element.getText());
+                                   noRepoLinks++;
+                               } else { urls.add(element.getText()); noUrls++; }
+                           } else { urls.add(element.getText());noUrls++; }
+                       }
 
-                        if((element.getClass().equals(MarkdownLinkDestinationImpl.class) && elemType == LINK_DESTINATION)) {
-                            if(element.getFirstChild().getNode().getElementType()==TEXT){
-                                repoReferences.add(element.getText());
-                                noRepoLinks++;
-                            } else { urls.add(element.getText()); noUrls++; }
-                        } else { urls.add(element.getText()); noUrls++; }
-                    }
+                       // counts headers
+                       if(elemType == ATX_HEADER) { noHeaders++; }
 
-                    // counts headers
-                    if(elemType == ATX_HEADER) { noHeaders++; }
-                    super.visitElement(element);
+                       List<List<String>> links = new ArrayList<>();
+                       links.add(urls);
+                       links.add(repoReferences);
+
+                       values.put(fileName, links);
+                       logger.info(values.toString());
+                       super.visitElement(element);
                 }
             });
 
@@ -150,7 +163,6 @@ public class MDStatistics {
         noUrls = 0;
         noLines = 0;
         noHeaders = 0;
-        repoReferences = new ArrayList<>();
-        urls = new ArrayList<>();
+        values = new HashMap<>();
     }
 }
