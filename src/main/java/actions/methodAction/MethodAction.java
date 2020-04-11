@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -22,6 +23,10 @@ import java.util.Objects;
  * An action that displays a set of statistics about methods in the currently open editor.
  */
 public class MethodAction extends AnAction {
+
+    private static final String DECIMAL_ROUNDING_FORMAT = "#.##";
+    private static final int COMPLEXITY_LEVEL_MILD_WARNING = 7;
+    private static final int COMPLEXITY_LEVEL_SERIOUS_WARNING = 10;
 
     /**
      * This default constructor is used by the IntelliJ Platform framework to
@@ -73,58 +78,25 @@ public class MethodAction extends AnAction {
             return;
         }
 
-        // Get file info and generate statistics object.
-        String filePath = currentFile.getPath();
-        String fileName = currentFile.getName();
-        int docLength = currentDoc.getTextLength();
-        int docLines = currentDoc.getLineCount();
-        FileStatistics myFileStatistics = new FileStatistics();
-
-        // Get Psi file
+        // Get psi file.
         PsiFile psiFile = PsiDocumentManager.getInstance(currentProject).getPsiFile(currentDoc);
-        // Check if file is Java file, else display warning
+
+        // Check: if file is Java file scan methods, else display warning.
         if (psiFile instanceof PsiJavaFile) {
 
+            FileStatistics myFileStatistics = new FileStatistics();
             visitMethods(psiFile, myFileStatistics);
+            String messageText = buildResultText(currentFile, currentDoc, myFileStatistics);
 
-            // Build string from list of methods
-            StringBuilder methodsStringBuilder = new StringBuilder();
-            ArrayList<MethodStatistics> methodsList = myFileStatistics.getMyMethods();
-            for (int i = 0; i < methodsList.size(); i++) {
-                MethodStatistics method = methodsList.get(i);
-                methodsStringBuilder.append("Name: ");
-                methodsStringBuilder.append(method.getName());
-                methodsStringBuilder.append(",   Complexity: ");
-                methodsStringBuilder.append(method.getComplexity());
-                if (i != methodsList.size() - 1) {
-                    methodsStringBuilder.append(";\n");
-                }
-            }
-
-            // Build final popup text string
-            String dlgMsg = "file name: " + fileName + "\n" +
-                    "file path: " + filePath + "\n" +
-                    "file length: " + docLength + "\n" +
-                    "lines of code: " + docLines + "\n" +
-                    "number of methods: " + myFileStatistics.getTotalMethods() + "\n" +
-                    "number of public methods: " + myFileStatistics.getMyPublicMethods() + "\n" +
-                    "number of private methods: " + myFileStatistics.getMyPrivateMethods() + "\n\n" +
-                    "Methods:\n" + methodsStringBuilder.toString();
             Messages.showMessageDialog(currentProject,
-                    dlgMsg,
+                    messageText,
                     "Summary Report",
                     Messages.getInformationIcon());
-
         } else {
 
-            // Build final popup text string
-            String dlgMsg = "file name: " + fileName + "\n" +
-                    "file path: " + filePath + "\n" +
-                    "file length: " + docLength + "\n" +
-                    "lines of code: " + docLines + "\n\n" +
-                    "We're sorry, but method statistics are currently only available for Java files :(";
+            String messageText = buildNonJavaText(currentFile, currentDoc);
             Messages.showMessageDialog(currentProject,
-                    dlgMsg,
+                    messageText,
                     "Summary Report",
                     Messages.getInformationIcon());
         }
@@ -133,6 +105,8 @@ public class MethodAction extends AnAction {
     /**
      * Helper method to get current document's methods from the psi,
      * and update the statistics input object with results.
+     * @param psiFile the Psi object representing the current file.
+     * @param stats the statistics object to fill with data during scan.
      */
     private void visitMethods(PsiFile psiFile, FileStatistics stats) {
 
@@ -147,6 +121,78 @@ public class MethodAction extends AnAction {
                 stats.addMethod(methodStatistics);
             }
         }
+    }
+
+    /**
+     * Build the string for the text that will be displayed in
+     * the plugin's popup if the plugin executes successfully.
+     * @param currentFile the file object
+     * @param currentDoc the document object
+     * @param myFileStatistics the statistics object containing result data.
+     * @return the String to be displayed in the plugin's popup
+     */
+    private String buildResultText(VirtualFile currentFile, Document currentDoc, FileStatistics myFileStatistics) {
+
+        // Build string from list of methods.
+        StringBuilder methodsStringBuilder = new StringBuilder();
+        ArrayList<MethodStatistics> methodsList = myFileStatistics.getMyMethods();
+        for (int i = 0; i < methodsList.size(); i++) {
+            MethodStatistics method = methodsList.get(i);
+            methodsStringBuilder.append("Name: ");
+            methodsStringBuilder.append(method.getName());
+            methodsStringBuilder.append(",   Complexity: ");
+            methodsStringBuilder.append(method.getComplexity());
+            if (i != methodsList.size() - 1) {
+                methodsStringBuilder.append(";");
+            }
+            methodsStringBuilder.append("\n");
+        }
+
+        // Build final popup text string.
+        StringBuilder messageText = new StringBuilder("file name: " + currentFile.getName() + "\n" +
+                "file path: " + currentFile.getPath() + "\n" +
+                "file length: " + currentDoc.getTextLength() + "\n" +
+                "lines of code: " + currentDoc.getLineCount() + "\n\n" +
+                "total methods: " + myFileStatistics.getTotalMethods() + "\n" +
+                "public methods: " + myFileStatistics.getPublicMethods() + "\n" +
+                "private methods: " + myFileStatistics.getPrivateMethods() + "\n" +
+                "void methods: " + myFileStatistics.getVoidMethods() + "\n" +
+                "constructors: " + myFileStatistics.getConstructors() + "\n\n" +
+                "Methods:\n" + methodsStringBuilder.toString() + "\n");
+
+        // Add display average complexity.
+        DecimalFormat df = new DecimalFormat(DECIMAL_ROUNDING_FORMAT);
+        float avgComplexity = myFileStatistics.getAvgComplexity();
+        messageText.append("Average complexity: ");
+        messageText.append(df.format(avgComplexity));
+
+        // If average complexity above thresholds: display warning.
+        if (avgComplexity >= COMPLEXITY_LEVEL_SERIOUS_WARNING) {
+            messageText.append("WARNING: Your average complexity is dangerously high.\n" +
+                    "This means your software will be hard to test properly and prone to bugs.\n" +
+                    "We strongly advise you to refactor your code to decrease the complexity of methods.");
+        } else if (avgComplexity >= COMPLEXITY_LEVEL_MILD_WARNING) {
+            messageText.append("WARNING: Your average complexity is high.\n" +
+                    "To improve code quality we advise you to refactor your code to decrease it.");
+        }
+
+        return messageText.toString();
+    }
+
+    /**
+     * Build the string for the text that will be displayed
+     * in the plugin's popup if the file is not a Java file.
+     * @param currentFile the file object
+     * @param currentDoc the document object
+     * @return the String to be displayed in the plugin's popup
+     */
+    private String buildNonJavaText(VirtualFile currentFile, Document currentDoc) {
+
+        return "file name: " + currentFile.getName() + "\n" +
+                "file path: " + currentFile.getPath() + "\n" +
+                "file length: " + currentDoc.getTextLength() + "\n" +
+                "lines of code: " + currentDoc.getLineCount() + "\n\n" +
+                "We're sorry, but method statistics are currently only available for Java files :(";
     }
 
     /**

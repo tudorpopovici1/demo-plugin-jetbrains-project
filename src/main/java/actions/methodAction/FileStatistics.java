@@ -1,9 +1,12 @@
 package actions.methodAction;
 
+import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
+import com.intellij.psi.PsiType;
 import com.sun.istack.NotNull;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author Tommaso Brandirali
@@ -17,7 +20,6 @@ public class FileStatistics {
     /**
      * Total number of methods.
      */
-    @NotNull
     private int myTotalMethods;
 
     public int getTotalMethods() {
@@ -27,21 +29,42 @@ public class FileStatistics {
     /**
      * Number of private methods.
      */
-    @NotNull
     private int myPrivateMethods;
 
-    public int getMyPrivateMethods() {
+    public int getPrivateMethods() {
         return myPrivateMethods;
     }
 
     /**
      * Number of public methods.
      */
-    @NotNull
     private int myPublicMethods;
 
-    public int getMyPublicMethods() {
+    public int getPublicMethods() {
         return myPublicMethods;
+    }
+
+    /**
+     * Number of void methods.
+     */
+    private int myVoidMethods;
+
+    public int getVoidMethods() {
+        return myVoidMethods;
+    }
+
+    /**
+     * Number of constructors.
+     */
+    private int myConstructors;
+
+    public int getConstructors() {
+        return myConstructors;
+    }
+
+    public float getAvgComplexity() {
+        int sumComplexities = myMethods.stream().mapToInt(MethodStatistics::getComplexity).sum();
+        return (float) sumComplexities / myTotalMethods;
     }
 
     /**
@@ -60,11 +83,17 @@ public class FileStatistics {
         myTotalMethods++;
 
         PsiModifierList modifiers = methodStatistics.getMethod().getModifierList();
-        if (modifiers.hasExplicitModifier("public")) {
+        if (modifiers.hasExplicitModifier(PsiModifier.PUBLIC)) {
             myPublicMethods++;
         }
-        if (modifiers.hasExplicitModifier("private")) {
+        if (modifiers.hasExplicitModifier(PsiModifier.PRIVATE)) {
             myPrivateMethods++;
+        }
+        if (Objects.equals(methodStatistics.getMethod().getReturnType(), PsiType.VOID)) {
+            myVoidMethods++;
+        }
+        if (methodStatistics.getMethod().isConstructor()) {
+            myConstructors++;
         }
     }
 
@@ -73,9 +102,10 @@ public class FileStatistics {
      */
     public FileStatistics() {
 
-        this.myTotalMethods = 0;
-        this.myPrivateMethods = 0;
-        this.myPublicMethods = 0;
-        this.myMethods = new ArrayList<>();
+        myTotalMethods = 0;
+        myPrivateMethods = 0;
+        myPublicMethods = 0;
+        myVoidMethods = 0;
+        myMethods = new ArrayList<>();
     }
 }
