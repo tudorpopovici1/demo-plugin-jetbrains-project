@@ -11,15 +11,10 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
-    <application-components>
-        <component>
-            <implementation-class>service.FileStatisticsService</implementation-class>
-        </component>
-    </application-components>
-
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
         <projectService serviceImplementation="service.SummaryService"/>
+        <projectService serviceImplementation="service.FileStatisticsService"/>
     </extensions>
 
 
