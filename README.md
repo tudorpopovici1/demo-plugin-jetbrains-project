@@ -1,5 +1,13 @@
 # Plugins for Intellij
 
+A toy plugin for IntelliJ IDEA created by group of TU Delft students.
+
+## Table of Contents
+* [Running the plugin for the first time](#running-the-plugin-for-the-first-time)
+* [Methods Plugin](#methods-plugin)
+* [Markdown Files Plugin](#markdown-files-plugin)
+* [Contributors](#contributors)
+
 ## Running the plugin for the first time
 
 Make sure the Gradle plugin is installed in your IDE, go to `File -> Open`, select the `build.gradle` file
@@ -31,3 +39,9 @@ Click on `Summary Report`<br/><br/>
 
 - In run tool window click on `Statistics`, this shows the statistics for the current open java file<br/><br/>
 ![Image of Statistics](images/image2.png)
+
+## Contributors
+* [Tudor Popovici](https://github.com/tudorpopovici1)
+* [Tommaso Brandirali](https://github.com/TommasoBrandirali)
+* [Ceren Ugurlu](https://github.com/cugurlu)
+* [Irem Ugurlu](https://github.com/iremugurlu)
