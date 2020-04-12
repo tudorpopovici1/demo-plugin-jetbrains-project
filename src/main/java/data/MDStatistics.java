@@ -12,6 +12,9 @@ import org.intellij.plugins.markdown.lang.psi.impl.MarkdownFile;
 import org.intellij.plugins.markdown.lang.psi.impl.MarkdownLinkDestinationImpl;
 import service.SummaryService;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import static org.intellij.markdown.flavours.gfm.GFMTokenTypes.GFM_AUTOLINK;
@@ -87,8 +90,8 @@ public class MDStatistics {
     /**
      * The map of files and their references and links
      */
-    private Map<String, List<List<String>>> values;
-    public Map<String, List<List<String>>> getValues() {
+    private Map<String, List<List<LinkStatistics>>> values;
+    public Map<String, List<List<LinkStatistics>>> getValues() {
         return values;
     }
 
@@ -103,8 +106,8 @@ public class MDStatistics {
 
         // gets each md file and gathers statistics
         for (VirtualFile virtualFile : virtualFiles) {
-            List<String> repoReferences = new ArrayList<>();
-            List<String> urls = new ArrayList<>();
+            List<LinkStatistics> repoReferences = new ArrayList<>();
+            List<LinkStatistics> urls = new ArrayList<>();
             linkFound = false;
             noFiles++;
             String fileName = virtualFile.getName();
@@ -128,16 +131,20 @@ public class MDStatistics {
                         noLinks++;
                         if((element.getClass().equals(MarkdownLinkDestinationImpl.class) && elemType == LINK_DESTINATION)) {
                             if(element.getFirstChild().getNode().getElementType()==TEXT){
-                                repoReferences.add(element.getText());
+
+                                // Check whether the internal link is valid
+                                Boolean validity = MDStatistics.checkFileValidity(currentProject, element.getText());
+                                repoReferences.add(new LinkStatistics(element.getText(), validity));
                                 noRepoLinks++;
-                            } else { urls.add(element.getText()); noUrls++; }
-                        } else { urls.add(element.getText());noUrls++; }
+
+                            } else { urls.add(new LinkStatistics(element.getText(), true)); noUrls++; }
+                        } else { urls.add(new LinkStatistics(element.getText(), true));noUrls++; }
                     }
 
                     // counts headers
                     if(elemType == ATX_HEADER) { noHeaders++; }
 
-                    List<List<String>> links = new ArrayList<>();
+                    List<List<LinkStatistics>> links = new ArrayList<>();
                     links.add(urls);
                     links.add(repoReferences);
 
@@ -150,6 +157,19 @@ public class MDStatistics {
             // counts numbers of files with links
             if (linkFound) { noFilesLinks++; }
         }
+    }
+
+
+    /**
+     * Helper function that checks the validity of a path inside the project
+     *
+     * @param project project in which to search the path
+     * @param pathString the relative path of the file to look for
+     * @return
+     */
+    private static boolean checkFileValidity(Project project, String pathString) {
+        final Path path = Paths.get(project.getBasePath(), pathString);
+        return Files.exists(path);
     }
 
     /**
