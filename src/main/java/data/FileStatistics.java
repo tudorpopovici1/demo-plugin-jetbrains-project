@@ -4,6 +4,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiModifier;
 import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiType;
+import com.intellij.util.xmlb.annotations.Transient;
 import com.sun.istack.NotNull;
 
 import java.util.ArrayList;
@@ -87,7 +88,6 @@ public class FileStatistics {
             fileStatistics.lines = this.lines;
             fileStatistics.fileLength = this.fileLength;
             fileStatistics.totalMethods = this.totalMethods;
-            fileStatistics.document = this.document;
             fileStatistics.constructors = this.constructors;
             fileStatistics.name = this.name;
             fileStatistics.voidMethods = this.voidMethods;
@@ -141,7 +141,6 @@ public class FileStatistics {
 
     private float averageComplexity;
     private int constructors;
-    private Document document;
     private int fileLength;
     private int lines;
     private String name;
@@ -155,6 +154,7 @@ public class FileStatistics {
     private int newFileLength;
 
     @NotNull
+    @Transient
     private ArrayList<MethodStatistics> methods;
 
     private FileStatistics() {}
@@ -197,14 +197,6 @@ public class FileStatistics {
 
     public void setConstructors(int constructors) {
         this.constructors = constructors;
-    }
-
-    public Document getDocument() {
-        return document;
-    }
-
-    public void setDocument(Document document) {
-        this.document = document;
     }
 
     public int getFileLength() {
@@ -275,7 +267,24 @@ public class FileStatistics {
         return methods;
     }
 
-    public void setMethods(ArrayList<MethodStatistics> methods) {
-        this.methods = methods;
+    @Override
+    public String toString() {
+        return "FileStatistics{" +
+                "averageComplexity=" + averageComplexity +
+                ", constructors=" + constructors +
+        //        ", document=" + document +
+                ", fileLength=" + fileLength +
+                ", lines=" + lines +
+                ", name='" + name + '\'' +
+                ", publicMethods=" + publicMethods +
+                ", privateMethods=" + privateMethods +
+                ", staticMethods=" + staticMethods +
+                ", totalMethods=" + totalMethods +
+                ", voidMethods=" + voidMethods +
+                ", newLines=" + newLines +
+                ", newMethods=" + newMethods +
+                ", newFileLength=" + newFileLength +
+                ", methods=" + methods +
+                '}';
     }
 }

@@ -14,7 +14,8 @@ import service.FileStatisticsService;
 import service.SummaryService;
 
 import javax.swing.*;
-import java.util.Objects;
+import java.util.*;
+
 
 /**
  * @author Irem Ugurlu
@@ -74,9 +75,6 @@ public class MethodAction extends AnAction {
             return;
         }
 
-        // Get the persistent storage service for file statistics
-        final FileStatisticsService fileStatisticsService = FileStatisticsService.getInstance();
-
         // Get current file.
         Document currentDoc = Objects.requireNonNull(FileEditorManager.getInstance(currentProject)
                 .getSelectedTextEditor()).getDocument();
@@ -84,7 +82,7 @@ public class MethodAction extends AnAction {
 
         // Update summary service view and save statistics of the file on disk.
         SummaryService summaryService = SummaryService.getInstance(currentProject);
-        summaryService.updateView(currentProject, currentFile, true);
+        summaryService.updateView(currentProject, currentFile, true, false);
         summaryService.save(currentFile);
     }
 
