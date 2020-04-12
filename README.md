@@ -29,7 +29,7 @@ click on `Markdown Files Report` or optionally use `Ctrl+Alt+F` shortcut <br/><b
 
 ## Methods Plugin
 In order to activate methods plugin go to tools menu
-click on `Summary Report` or optionally use `Ctrl+Alt+F` shortcut <br/><br/>
+click on `Summary Report` or optionally use `Ctrl+Alt+G` shortcut <br/><br/>
 ![Image of Tools Menu](images/image1.png)<br/>
 
 - In run tool window when you click on `Statistics`, it shows the statistics for the current open java file<br/><br/>
