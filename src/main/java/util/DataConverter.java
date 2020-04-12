@@ -46,26 +46,28 @@ public class DataConverter {
 
     private static void addNewDeletedStatistics(ArrayList<SummaryData> summaries, FileStatistics stats) {
         if (stats.getNewLines() < 0) {
-            summaries.add(new SummaryData("No of deleted lines (since action last run)", -stats.getNewLines() + ""));
+            summaries.add(new SummaryData("No of deleted lines (since action last run on this file)", -stats.getNewLines() + ""));
 
         } else {
-            summaries.add(new SummaryData("No of new lines (since action last run)", stats.getNewLines() + ""));
+            summaries.add(new SummaryData("No of new lines (since action last run on this file)", stats.getNewLines() + ""));
         }
         if (stats.getNewFileLength() < 0) {
-            summaries.add(new SummaryData("No of deleted characters (since action last run)", -stats.getNewFileLength() + ""));
+            summaries.add(new SummaryData("No of deleted characters (since action last run on this file)", -stats.getNewFileLength() + ""));
         } else {
-            summaries.add(new SummaryData("No of new characters (since action last run)", stats.getNewFileLength() + ""));
+            summaries.add(new SummaryData("No of new characters (since action last run on this file)", stats.getNewFileLength() + ""));
         }
         if (stats.getNewMethods() < 0) {
-            summaries.add(new SummaryData("No of deleted methods (since action last run)", -stats.getNewMethods() + ""));
+            summaries.add(new SummaryData("No of deleted methods (since action last run on this file)", -stats.getNewMethods() + ""));
         } else {
-            summaries.add(new SummaryData("No of new methods (since action last run)", stats.getNewMethods() + ""));
+            summaries.add(new SummaryData("No of new methods (since action last run on this file)", stats.getNewMethods() + ""));
         }
     }
 
     private static void addCyclomaticComplexities(ArrayList<SummaryData> summaries, FileStatistics stats) {
-        for (MethodStatistics methodStatistics : stats.getMethods()) {
-            summaries.add(new SummaryData("Cyclomatic complexity for: " + methodStatistics.getName(), methodStatistics.getComplexity() + ""));
+        if (stats.getMethods() != null) {
+            for (MethodStatistics methodStatistics : stats.getMethods()) {
+                summaries.add(new SummaryData("Cyclomatic complexity for: " + methodStatistics.getName(), methodStatistics.getComplexity() + ""));
+            }
         }
     }
 }
