@@ -48,17 +48,17 @@ public class DataConverter {
         if (stats.getNewLines() < 0) {
             summaries.add(new SummaryData("No of deleted lines (since action last run on this file)", -stats.getNewLines() + ""));
 
-        } else {
+        } else if (stats.getNewLines() > 0){
             summaries.add(new SummaryData("No of new lines (since action last run on this file)", stats.getNewLines() + ""));
         }
         if (stats.getNewFileLength() < 0) {
             summaries.add(new SummaryData("No of deleted characters (since action last run on this file)", -stats.getNewFileLength() + ""));
-        } else {
+        } else  if (stats.getNewFileLength() > 0){
             summaries.add(new SummaryData("No of new characters (since action last run on this file)", stats.getNewFileLength() + ""));
         }
         if (stats.getNewMethods() < 0) {
             summaries.add(new SummaryData("No of deleted methods (since action last run on this file)", -stats.getNewMethods() + ""));
-        } else {
+        } else if (stats.getNewMethods() > 0){
             summaries.add(new SummaryData("No of new methods (since action last run on this file)", stats.getNewMethods() + ""));
         }
     }
