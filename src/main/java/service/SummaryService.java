@@ -60,7 +60,6 @@ public class SummaryService {
         connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
-                save(event.getNewFile());
                 updateView(event.getManager().getProject(), event.getNewFile(), false, true);
             }
         });
@@ -94,7 +93,7 @@ public class SummaryService {
      * @param psiFile file for which to collect statistics
      * @return FileStatistics object
      */
-    private FileStatistics buildFileStatistics(PsiFile psiFile, Boolean fileChanged) {
+    public FileStatistics buildFileStatistics(PsiFile psiFile, Boolean fileChanged) {
         FileStatisticsBuilder builder = this.buildWithCurrentData(psiFile);
         if (fileChanged) {
             return builder.build();
@@ -135,7 +134,7 @@ public class SummaryService {
      * @return a new FileStatisticsBuilder object containing the 'storage' statistics.
      */
     private FileStatisticsBuilder buildWithStorageData(FileStatisticsBuilder builder, String name) {
-        DataAggregator dataAggregator = new DataAggregator(project.getName(), name);
+        DataAggregator dataAggregator = new DataAggregator(project, name);
         return dataAggregator.collectStorageData(builder);
     }
 
@@ -145,11 +144,11 @@ public class SummaryService {
      * @param file file object for which to store the statistics on disk.
      */
     public void save(VirtualFile file) {
-        final FileStatisticsService fileStatisticsService = FileStatisticsService.getInstance();
+        final FileStatisticsService fileStatisticsService = FileStatisticsService.getInstance(this.project);
         if (file != null) {
             PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
             if (psiFile instanceof PsiJavaFile) {
-                fileStatisticsService.saveStatistics(this.project.getName(), this.buildFileStatistics(psiFile, false));
+                fileStatisticsService.saveStatistics(this.buildFileStatistics(psiFile, false));
             } else {
                 // TODO: Save statistics for other types of files
             }

@@ -1,6 +1,7 @@
 package data;
 
 import com.intellij.psi.PsiMethod;
+import com.intellij.util.xmlb.annotations.Transient;
 import com.sun.istack.NotNull;
 
 /**
@@ -15,6 +16,7 @@ public class MethodStatistics {
      * The method object referenced by this instance.
      */
     @NotNull
+    @Transient
     private PsiMethod method;
 
     public PsiMethod getMethod() {
@@ -67,4 +69,5 @@ public class MethodStatistics {
         this.name = method.getName();
         this.complexity = 1;
     }
+
 }
