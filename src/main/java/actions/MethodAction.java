@@ -92,7 +92,7 @@ public class MethodAction extends AnAction {
 
         // Update summary service view and save statistics of the file on disk.
         SummaryService summaryService = SummaryService.getInstance(currentProject);
-        summaryService.updateView(currentProject, currentFile, true);
+        summaryService.updateView(currentProject, currentFile, true, false);
         summaryService.save(currentFile);
     }
 

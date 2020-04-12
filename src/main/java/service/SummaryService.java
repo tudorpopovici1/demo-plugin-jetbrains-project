@@ -60,7 +60,8 @@ public class SummaryService {
         connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
-                updateView (event.getManager().getProject(), event.getNewFile(), false);
+                save(event.getNewFile());
+                updateView(event.getManager().getProject(), event.getNewFile(), false, true);
             }
         });
 
@@ -69,7 +70,7 @@ public class SummaryService {
             @Override
             protected void onChange(@Nullable PsiFile psiFile) {
                 if (psiFile instanceof PsiJavaFile) {
-                    updateView(psiFile.getProject(), psiFile.getVirtualFile(), false);
+                    updateView(psiFile.getProject(), psiFile.getVirtualFile(), false, true);
                 }
             }
         });
@@ -81,10 +82,10 @@ public class SummaryService {
      * @param psiFile the psi object
      * @return a list of SummaryData entries
      */
-    private ArrayList<SummaryData> getSummary(PsiJavaFile psiFile) {
+    private ArrayList<SummaryData> getSummary(PsiJavaFile psiFile, Boolean fileChanged) {
 
         // Convert data to summary format.
-        return DataConverter.fileStatisticsToSummaryData(this.buildFileStatistics(psiFile));
+        return DataConverter.fileStatisticsToSummaryData(this.buildFileStatistics(psiFile, fileChanged));
     }
 
     /**
@@ -93,8 +94,11 @@ public class SummaryService {
      * @param psiFile file for which to collect statistics
      * @return FileStatistics object
      */
-    private FileStatistics buildFileStatistics(PsiFile psiFile) {
+    private FileStatistics buildFileStatistics(PsiFile psiFile, Boolean fileChanged) {
         FileStatisticsBuilder builder = this.buildWithCurrentData(psiFile);
+        if (fileChanged) {
+            return builder.build();
+        }
         return buildWithStorageData(builder, psiFile.getName()).build();
     }
 
@@ -145,7 +149,7 @@ public class SummaryService {
         if (file != null) {
             PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
             if (psiFile instanceof PsiJavaFile) {
-                fileStatisticsService.saveStatistics(this.project.getName(), this.buildFileStatistics(psiFile));
+                fileStatisticsService.saveStatistics(this.project.getName(), this.buildFileStatistics(psiFile, false));
             } else {
                 // TODO: Save statistics for other types of files
             }
@@ -159,7 +163,7 @@ public class SummaryService {
      * @param file the file object referring to the document in the currently open editor
      * @param activate check whether the table should be activated or not
      */
-    public void updateView(Project project, VirtualFile file, Boolean activate) {
+    public void updateView(Project project, VirtualFile file, Boolean activate, Boolean fileChanged) {
         ArrayList<SummaryData> summaries = new ArrayList<>();
         ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Statistics");
 
@@ -167,7 +171,7 @@ public class SummaryService {
             PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
             if (psiFile instanceof PsiJavaFile) {
                 PsiJavaFile javaFile = (PsiJavaFile)psiFile;
-                summaries = getSummary(javaFile);
+                summaries = getSummary(javaFile, fileChanged);
                 view.updateModel(summaries);
                 if (activate) {
                     toolWindow.activate(null);
