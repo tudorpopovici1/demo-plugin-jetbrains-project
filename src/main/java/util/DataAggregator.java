@@ -1,5 +1,6 @@
 package util;
 
+import com.intellij.openapi.project.Project;
 import data.FileStatistics;
 import data.FileStatistics.FileStatisticsBuilder;
 import service.FileStatisticsService;
@@ -20,9 +21,9 @@ public class DataAggregator {
     private List<FileStatistics> fileStatisticsList;
     private FileStatisticsService fileStatisticsService;
 
-    public DataAggregator(String projectName, String fileName) {
-        this.fileStatisticsService = FileStatisticsService.getInstance();
-        this.fileStatisticsList = this.getFileStatisticsList(projectName, fileName);
+    public DataAggregator(Project project, String fileName) {
+        this.fileStatisticsService = FileStatisticsService.getInstance(project);
+        this.fileStatisticsList = this.getFileStatisticsList(fileName);
         this.lastOccurrence = this.getLastOccurrence();
     }
 
@@ -60,22 +61,18 @@ public class DataAggregator {
     }
 
     /**
-     * Retrieve the file statistics list from disk, given a project name and file name.
+     * Retrieve the file statistics list from disk, given a file name.
      *
-     * @param projectName project name to use for querying.
      * @param fileName file name to use for querying.
      * @return  a list of FileStatistics objects.
      */
-    private List<FileStatistics> getFileStatisticsList(String projectName, String fileName) {
+    private List<FileStatistics> getFileStatisticsList(String fileName) {
 
-        Map<String, Map<String, List<FileStatistics>>> projectMap = fileStatisticsService.getProjectMap();
+        Map<String, List<FileStatistics>> fileStatisticsMap = fileStatisticsService.getFileStatisticsMap();
 
-        if (projectMap != null) {
-            if (projectMap.containsKey(projectName)) {
-                Map<String, List<FileStatistics>> fileStatisticsMap = projectMap.get(projectName);
-                if (fileStatisticsMap.containsKey(fileName)) {
-                    return fileStatisticsMap.get(fileName);
-                }
+        if (fileStatisticsMap != null) {
+            if (fileStatisticsMap.containsKey(fileName)) {
+                return fileStatisticsMap.get(fileName);
             }
         }
         return null;
