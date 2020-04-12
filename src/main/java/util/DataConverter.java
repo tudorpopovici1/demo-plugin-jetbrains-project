@@ -2,6 +2,7 @@ package util;
 
 import com.intellij.openapi.editor.Document;
 import data.FileStatistics;
+import data.MethodStatistics;
 import data.SummaryData;
 
 import java.text.DecimalFormat;
@@ -23,8 +24,15 @@ public class DataConverter {
     public static ArrayList<SummaryData> fileStatisticsToSummaryData(FileStatistics stats) {
 
         ArrayList<SummaryData> summaries = new ArrayList<>();
-        DecimalFormat df = new DecimalFormat(DECIMAL_ROUNDING_FORMAT);
+        DataConverter.addMiscellaneousStatistics(summaries, stats);
+        DataConverter.addCyclomaticComplexities(summaries, stats);
+        DataConverter.addNewDeletedStatistics(summaries, stats);
 
+        return summaries;
+    }
+
+    private static void addMiscellaneousStatistics(ArrayList<SummaryData> summaries, FileStatistics stats) {
+        DecimalFormat df = new DecimalFormat(DECIMAL_ROUNDING_FORMAT);
         summaries.add(new SummaryData("Name", stats.getName()));
         summaries.add(new SummaryData("No of lines", stats.getLines() + ""));
         summaries.add(new SummaryData("File length", stats.getFileLength() + ""));
@@ -34,6 +42,9 @@ public class DataConverter {
         summaries.add(new SummaryData("No of static methods", stats.getStaticMethods() + ""));
         summaries.add(new SummaryData("Average cyclomatic complexity",
                 df.format(stats.getAverageComplexity()) + ""));
+    }
+
+    private static void addNewDeletedStatistics(ArrayList<SummaryData> summaries, FileStatistics stats) {
         if (stats.getNewLines() < 0) {
             summaries.add(new SummaryData("No of deleted lines (since action last run)", -stats.getNewLines() + ""));
 
@@ -50,7 +61,11 @@ public class DataConverter {
         } else {
             summaries.add(new SummaryData("No of new methods (since action last run)", stats.getNewMethods() + ""));
         }
+    }
 
-        return summaries;
+    private static void addCyclomaticComplexities(ArrayList<SummaryData> summaries, FileStatistics stats) {
+        for (MethodStatistics methodStatistics : stats.getMethods()) {
+            summaries.add(new SummaryData("Cyclomatic complexity for: " + methodStatistics.getName(), methodStatistics.getComplexity() + ""));
+        }
     }
 }
