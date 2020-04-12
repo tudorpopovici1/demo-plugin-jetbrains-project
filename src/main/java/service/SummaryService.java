@@ -31,6 +31,9 @@ import view.SummaryView;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Service for Summary Report plugin
+ */
 public class SummaryService {
 
     private final static Logger logger = Logger.getInstance(SummaryService.class);
@@ -39,7 +42,10 @@ public class SummaryService {
     private ArrayList<SummaryData> lastSummary = new ArrayList<>();
     private Project project;
 
-
+    /**
+     * Class constructor
+     * @param project current project
+     */
     public SummaryService(Project project) {
         logger.info("Summary service is starting");
 

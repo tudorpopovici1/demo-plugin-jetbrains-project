@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * Class creating plugin view
+ * Class creating summary method plugin view
  */
 public class SummaryView extends JPanel {
 
@@ -37,7 +37,7 @@ public class SummaryView extends JPanel {
     }
 
     /**
-     * Updating table
+     * Updating table view
      * @param summaries list including statistics
      */
     public void updateModel(List<SummaryData> summaries) {
