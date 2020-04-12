@@ -18,6 +18,7 @@ import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import data.LinkStatistics;
 import data.MDStatistics;
 import data.SummaryData;
 import org.intellij.plugins.markdown.lang.MarkdownFileType;
@@ -57,7 +58,7 @@ public class MarkdownService {
         // statistics window
         ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(
-                "MD Statistics", false, ToolWindowAnchor.BOTTOM);
+                "MD Statistics - metrics/project", false, ToolWindowAnchor.BOTTOM);
         toolWindow.setIcon(IconLoader.getIcon("/icons/md.png"));
 
         // md files window
@@ -117,7 +118,7 @@ public class MarkdownService {
 
         MDStatistics mdStatistics = new MDStatistics();
         mdStatistics.updateStatistics(project, virtualFiles);
-        Map<String, List<List<String>>> map = mdStatistics.getValues();
+        Map<String, List<List<LinkStatistics>>> map = mdStatistics.getValues();
         mdView.updateModel(map);
     }
 

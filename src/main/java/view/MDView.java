@@ -2,6 +2,8 @@ package view;
 
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
+import data.LinkStatistics;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -32,22 +34,22 @@ public class MDView extends JPanel {
      * Updating tree view
      * @param files map including file names and their references and links
      */
-    public void updateModel(Map<String, List<List<String>>> files) {
+    public void updateModel(Map<String, List<List<LinkStatistics>>> files) {
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
         root.removeAllChildren();
         for (String fileName : files.keySet()){
             DefaultMutableTreeNode file = new DefaultMutableTreeNode(fileName);
             DefaultMutableTreeNode urlLinks = new DefaultMutableTreeNode("URL Links");
             DefaultMutableTreeNode references = new DefaultMutableTreeNode("References");
-            List<List<String>> list = files.get(fileName);
-            List<String> urlList = list.get(0);
-            List<String> refList = list.get(1);
-            for (String url : urlList) {
-                DefaultMutableTreeNode newUrl = new DefaultMutableTreeNode(url);
+            List<List<LinkStatistics>> list = files.get(fileName);
+            List<LinkStatistics> urlList = list.get(0);
+            List<LinkStatistics> refList = list.get(1);
+            for (LinkStatistics urlLink : urlList) {
+                DefaultMutableTreeNode newUrl = new DefaultMutableTreeNode(urlLink.getLink() + " --- This link is " + urlLink.validityToString());
                 urlLinks.add(newUrl);
             }
-            for (String ref : refList) {
-                DefaultMutableTreeNode newUrl = new DefaultMutableTreeNode(ref);
+            for (LinkStatistics refLink : refList) {
+                DefaultMutableTreeNode newUrl = new DefaultMutableTreeNode(refLink.getLink() + " --- This link is " + refLink.validityToString());
                 references.add(newUrl);
             }
             file.add(urlLinks);
