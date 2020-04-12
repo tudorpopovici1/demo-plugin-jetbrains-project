@@ -276,6 +276,7 @@ public class FileStatistics {
     }
 
     public void setMethods(ArrayList<MethodStatistics> methods) {
-        this.methods = methods;
+        if (methods != null && methods.size()!= 0)
+            this.methods = methods;
     }
 }
