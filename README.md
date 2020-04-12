@@ -4,8 +4,8 @@ A toy plugin for IntelliJ IDEA created by group of TU Delft students.
 
 ## Table of Contents
 * [Running the plugin for the first time](#running-the-plugin-for-the-first-time)
-* [Methods Plugin](#methods-plugin)
 * [Markdown Files Plugin](#markdown-files-plugin)
+* [Methods Plugin](#methods-plugin)
 * [Contributors](#contributors)
 
 ## Running the plugin for the first time
