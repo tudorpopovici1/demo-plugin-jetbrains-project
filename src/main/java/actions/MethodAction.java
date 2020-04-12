@@ -20,9 +20,7 @@ import service.SummaryService;
 import util.DataAggregator;
 
 import javax.swing.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Irem Ugurlu
@@ -81,9 +79,6 @@ public class MethodAction extends AnAction {
             );
             return;
         }
-
-        // Get the persistent storage service for file statistics
-        final FileStatisticsService fileStatisticsService = FileStatisticsService.getInstance();
 
         // Get current file.
         Document currentDoc = Objects.requireNonNull(FileEditorManager.getInstance(currentProject)
