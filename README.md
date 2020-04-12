@@ -19,7 +19,7 @@ and follow the following steps:
 
 ## Markdown Files Plugin
 In order to activate markdown files plugin go to tools menu
-click on `Markdown Files Report`<br/><br/>
+click on `Markdown Files Report` or optionally use `Ctrl+Alt+F` shortcut <br/><br/>
 ![Image of Tools Menu](images/image1.png)<br/>
 - In run tool window when you click on `MD Files`, it shows the all markdown files in the project. Under each markdown file you can find the **URL links** and **References** that it has<br/><br/>
 ![Image of MD Files](images/image4.png)
@@ -29,7 +29,7 @@ click on `Markdown Files Report`<br/><br/>
 
 ## Methods Plugin
 In order to activate methods plugin go to tools menu
-click on `Summary Report`<br/><br/>
+click on `Summary Report` or optionally use `Ctrl+Alt+F` shortcut <br/><br/>
 ![Image of Tools Menu](images/image1.png)<br/>
 
 - In run tool window when you click on `Statistics`, it shows the statistics for the current open java file<br/><br/>
