@@ -9,30 +9,32 @@ A toy plugin for IntelliJ IDEA created by group of TU Delft students.
 * [Contributors](#contributors)
 
 ## Running the plugin for the first time
-
+* Use following steps to run the plugin: 
 Make sure the Gradle plugin is installed in your IDE.
 
-Once the IDE is done downloading dependencies and refreshing the project, you can use the `Gradle` tool window
-and follow the following steps:
-* `Tasks > intellij > runIde` to run the plugin in a sandboxed instance<br/><br/>
-![Image of runIde](images/image5.png)
+  * Make sure the Gradle is installed in your computer
+  * Then, install plugin repository to your computer
+  * Open your 'Terminal' and go to the directory you installed the plugin
+  * Then, run **"gradle runIde"**
+  * Plugin is ready to use!
 
 ## Markdown Files Plugin
-In order to activate markdown files plugin go to tools menu
-click on `Markdown Files Report` or optionally use `Ctrl+Alt+F` shortcut <br/><br/>
+In order to activate markdown files plugin go to tools menu click on `Markdown Files Report` 
+or optionally use `Ctrl+Alt+F` shortcut <br/><br/>
 ![Image of Tools Menu](images/image1.png)<br/>
 - In run tool window when you click on `MD Files`, it shows the all markdown files in the project. Under each markdown file you can find the **URL links** and **References** that it has<br/><br/>
-![Image of MD Files](images/image4.png)
+![Image of MD Files](images/image4.png)<br/>
 - In run tool window when you click on `MD Statistics - metrics/project`, it shows the statistics for markdown files<br/><br/>
-![Image of MD Statistics](images/image3.png)
+![Image of MD Statistics](images/image3.png)<br/>
+- When you change the content of a markdown file, delete a markdown file or add a new markdown file, all statistics are dynamically updating. So you always see up to date statistics
 
 
 ## Methods Plugin
 In order to activate methods plugin go to tools menu
 click on `Summary Report` or optionally use `Ctrl+Alt+G` shortcut <br/><br/>
 ![Image of Tools Menu](images/image1.png)<br/>
-
-- In run tool window when you click on `Statistics`, it shows the statistics for the current open java file<br/><br/>
+- In run tool window when you click on `Statistics`, it shows the statistics for the current open java file
+- If you click to another Java file or change the content of the file, it refreshes the statistics in the table. It starts to display the renewed statistics of the current file.<br/><br/>
 ![Image of Statistics](images/image2.png)
 
 ## Contributors

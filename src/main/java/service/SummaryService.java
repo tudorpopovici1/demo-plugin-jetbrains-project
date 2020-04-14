@@ -63,7 +63,7 @@ public class SummaryService {
 
         // update view when new file is selected
         final MessageBusConnection connection = project.getMessageBus().connect(project);
-        connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerAdapter() {
+        connection.subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
             @Override
             public void selectionChanged(@NotNull FileEditorManagerEvent event) {
                 updateView(event.getManager().getProject(), event.getNewFile(), false, true);
