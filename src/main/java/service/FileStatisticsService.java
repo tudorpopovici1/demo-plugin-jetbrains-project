@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import data.FileStatistics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,21 +29,22 @@ public class FileStatisticsService implements PersistentStateComponent<FileStati
     public State state = new State();
 
     public static class State {
-        public Map<String, Map<String, List<FileStatistics>>> projectMap = new HashMap<>();
+        public Map<String, List<FileStatistics>> fileStatisticsMap = new HashMap<>();
     }
 
-    public void setProjectMap(@NotNull Map<String, Map<String, List<FileStatistics>>> projectMap) {
-        state.projectMap = projectMap;
+    public void setFileStatisticsMap(@NotNull Map<String, List<FileStatistics>> fileStatisticsMap) {
+        state.fileStatisticsMap = fileStatisticsMap;
     }
 
-    public Map<String, Map<String, List<FileStatistics>>> getProjectMap() {
-        return state.projectMap;
+    public Map<String, List<FileStatistics>> getFileStatisticsMap() {
+        return state.fileStatisticsMap;
     }
 
     @Nullable
     @Override
     public State getState() {
-        logger.info("FileStatisticsService: Saving state");
+        System.out.println("FileStatisticsService: Saving state");
+        // logger.info("FileStatisticsService: Saving state");
         return state;
     }
 
@@ -58,40 +60,33 @@ public class FileStatisticsService implements PersistentStateComponent<FileStati
 
     /**
      * Saves on disk statistics per project and per file.
-     * @param projectName name of the project - to be used as a key - unique within the xml file
+     *
      * @param fileStatistics object containing all of the information to be stored on disk
      */
-    public void saveStatistics(String projectName, FileStatistics fileStatistics) {
+    public void saveStatistics(FileStatistics fileStatistics) {
 
-        Map<String, Map<String, List<FileStatistics>>> projectMap = this.getProjectMap();
+        Map<String, List<FileStatistics>> fileStatisticsMap = this.getFileStatisticsMap();
         String fileName = fileStatistics.getName();
 
-        // Project already exists in memory
-        if (projectMap.containsKey(projectName)) {
-            Map<String, List<FileStatistics>> fileStatisticsMap = projectMap.get(projectName);
-            if (fileStatisticsMap.containsKey(fileName)) {
-                List<FileStatistics> fileStatisticsList = fileStatisticsMap.get(fileName);
-                fileStatisticsList.add(fileStatistics);
-            } else {
-                List<FileStatistics> fileStatisticsList = new ArrayList<>();
-                fileStatisticsList.add(fileStatistics);
-                fileStatisticsMap.put(fileName, fileStatisticsList);
-            }
+        // File already exists in memory
+        if (fileStatisticsMap.containsKey(fileName)) {
+            fileStatisticsMap.get(fileName).add(fileStatistics);
         } else {
-            Map<String, List<FileStatistics>> newFileStatisticsMap = new HashMap<>();
             List<FileStatistics> fileStatisticsList = new ArrayList<>();
             fileStatisticsList.add(fileStatistics);
-            newFileStatisticsMap.put(fileName, fileStatisticsList);
-            projectMap.put(projectName, newFileStatisticsMap);
+            fileStatisticsMap.put(fileName, fileStatisticsList);
         }
-        this.setProjectMap(projectMap);
+        this.setFileStatisticsMap(fileStatisticsMap);
     }
+
 
     /**
      * Wrapper function that returns a FileStatisticsService instance
      * @return FileStatisticsService instance
      */
-    public static FileStatisticsService getInstance() {
-        return ApplicationManager.getApplication().getComponent(FileStatisticsService.class);
+    public static FileStatisticsService getInstance(Project currentProject) {
+        // return currentProject.getComponent(FileStatisticsService.class);
+        //return ApplicationManager.getApplication().getComponent(FileStatisticsService.class);
+        return ServiceManager.getService(currentProject, FileStatisticsService.class);
     }
 }

@@ -16,7 +16,6 @@ import java.util.Vector;
  */
 public class SummaryView extends JPanel {
 
-    private JBTable table;
     private DefaultTableModel model;
 
     /**
@@ -24,8 +23,10 @@ public class SummaryView extends JPanel {
      */
     public SummaryView() {
         super();
-        table = new JBTable();
-        model = new DefaultTableModel(new Vector(), new Vector(Arrays.asList(new String[] {"Name", "Value"})));
+        JBTable table = new JBTable();
+        Vector<? extends Vector> vector = new Vector<>();
+        Vector<String> listVector = new Vector<>(Arrays.asList("Name", "Value"));
+        model = new DefaultTableModel(vector, listVector);
         table.setModel(model);
         table.setCellSelectionEnabled(false);
         table.setColumnSelectionAllowed(false);
@@ -46,7 +47,7 @@ public class SummaryView extends JPanel {
             model.removeRow(0);
         }
         for (SummaryData summary : summaries) {
-            Vector row = new Vector();
+            Vector<String> row = new Vector<>();
             row.add(summary.getName());
             row.add(summary.getValue());
             model.addRow(row);
