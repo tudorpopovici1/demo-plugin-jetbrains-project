@@ -40,6 +40,8 @@ file is **created, renamed or moved back** respectively.<br/><br/>
 
 [inline link](build.gradle)
 
+[another link](https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blame/master/src/main/java/actions/MarkdownAction.java#L38)
+
 
 [1]: https://www.jetbrains.com
 
