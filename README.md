@@ -18,7 +18,10 @@ Make sure the Gradle plugin is installed in your IDE.
   * Then, run **"gradle runIde"**
   * Plugin is ready to use!
 
-## Markdown Files Plugin
+## Markdown Files Plugin 123
+commit
+1
+
 In order to activate markdown files plugin go to tools menu click on `Markdown Files Report` 
 or optionally use `Ctrl+Alt+F` shortcut
 
