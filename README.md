@@ -38,6 +38,10 @@ file is **created, renamed or moved back** respectively.<br/><br/>
 - When you change the content of a markdown file, delete a markdown file or add a new markdown file, all statistics are dynamically updated. So you always see up to date statistics.<br/><br/>
 ![Image of MD Statistics](images/image3.png)<br/><br/>
 
+[inline link](build.gradle)
+
+
+[1]: https://www.jetbrains.com
 
 ## Methods Plugin
 In order to activate methods plugin go to tools menu
