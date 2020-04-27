@@ -38,7 +38,7 @@ file is **created, renamed or moved back** respectively.<br/><br/>
 - When you change the content of a markdown file, delete a markdown file or add a new markdown file, all statistics are dynamically updated. So you always see up to date statistics.<br/><br/>
 ![Image of MD Statistics](images/image3.png)<br/><br/>
 
-[inline link](build.gradle#L25)
+[inline link](build.gradle#L21- L25)
 
 [another link](https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blame/master/src/main/java/actions/MarkdownAction.java#L38)
 
