@@ -25,6 +25,7 @@ public class DataAggregator {
         this.fileStatisticsService = FileStatisticsService.getInstance(project);
         this.fileStatisticsList = this.getFileStatisticsList(fileName);
         this.lastOccurrence = this.getLastOccurrence();
+        System.out.println("ok");
     }
 
 
