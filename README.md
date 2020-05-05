@@ -43,6 +43,8 @@ file is **created, renamed or moved back** respectively.<br/><br/>
 [another link](https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blame/master/src/main/java/actions/MarkdownAction.java#L38)
 
 
+[inline link](build.gradle#L25)
+
 [1]: https://www.jetbrains.com
 
 ## Methods Plugin
