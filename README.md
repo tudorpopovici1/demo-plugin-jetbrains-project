@@ -46,6 +46,9 @@ file is **created, renamed or moved back** respectively.<br/><br/>
    
    
    
+   
+   
+   
    new text added   [inline link](build.gradle#L25)
 
 [another link](https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blame/master/src/main/java/actions/MarkdownAction.java#L38)
