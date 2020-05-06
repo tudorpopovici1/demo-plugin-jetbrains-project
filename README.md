@@ -28,11 +28,13 @@ This will open 2 displays in the run tool window: `MD Files` and `MD Statistics 
 ![Image of Tools Menu](images/image1.png)<br/><br/>
 
 ## Functionality
-- In run tool window when you click on `MD Files`, it shows the all markdown files in the project. Under each markdown file you can find the **URL links** and **References** that it has.<br/>
 - Each link is accompanied by a valid / invalid tag. For internal repository links, this tag
 automatically changes from **VALID** to **INVALID** when the file referenced is either **moved, renamed or deleted** - **INVALID** to **VALID** when the
 file is **created, renamed or moved back** respectively.<br/><br/>
+- In run tool window when you click on `MD Files`, it shows the all markdown files in the project. Under each markdown file you can find the **URL links** and **References** that it has.<br/>
+
 ![Image of MD Files](images/image4.png)<br/><br/>
+this is a new line
 - In run tool window when you click on `MD Statistics - metrics/project`, it shows the statistics for markdown files.<br/>
 - When you change the content of a markdown file, delete a markdown file or add a new markdown file, all statistics are dynamically updated. So you always see up to date statistics.<br/><br/>
 ![Image of MD Statistics](images/image3.png)<br/><br/>
