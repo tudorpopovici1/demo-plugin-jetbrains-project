@@ -21,7 +21,6 @@ Make sure the Gradle plugin is installed in your IDE.
 ## Markdown Files Plugin 123
 commit
 1
-
 In order to activate markdown files plugin go to tools menu click on `Markdown Files Report` 
 or optionally use `Ctrl+Alt+F` shortcut
 
