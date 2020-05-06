@@ -25,7 +25,6 @@ import data.SummaryData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.DataAggregator;
-import util.DataConverter;
 import view.SummaryView;
 
 import java.util.ArrayList;
@@ -84,13 +83,13 @@ public class SummaryService {
     /**
      * This method executes the data gathering logic and refactors the data
      * to prepare it for being passed to the view.
-     * @param psiFile the psi object
      * @return a list of SummaryData entries
      */
-    private ArrayList<SummaryData> getSummary(PsiJavaFile psiFile, Boolean fileChanged) {
+    private ArrayList<SummaryData> getSummary(Boolean fileChanged) {
 
         // Convert data to summary format.
-        return DataConverter.fileStatisticsToSummaryData(this.buildFileStatistics(psiFile, fileChanged));
+        //return DataConverter.fileStatisticsToSummaryData(this.buildFileStatistics(psiFile, fileChanged));
+        return new ArrayList<>();
     }
 
     /**
@@ -144,11 +143,11 @@ public class SummaryService {
         return dataAggregator.collectStorageData(builder);
     }
 
-    /**
+    /*    *//**
      * Saves the file statistics of a JAVA file on disk.
      *
      * @param file file object for which to store the statistics on disk.
-     */
+     *//*
     public void save(VirtualFile file) {
         final FileStatisticsService fileStatisticsService = FileStatisticsService.getInstance(this.project);
         if (file != null) {
@@ -160,7 +159,7 @@ public class SummaryService {
             }
         }
 
-    }
+    }*/
 
     /**
      * Update the view.
@@ -174,9 +173,10 @@ public class SummaryService {
 
         if (file != null) {
             PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
-            if (psiFile instanceof PsiJavaFile) {
-                PsiJavaFile javaFile = (PsiJavaFile)psiFile;
-                summaries = getSummary(javaFile, fileChanged);
+            if (true) {
+                //PsiJavaFile javaFile = (PsiJavaFile)psiFile;
+                //summaries = getSummary(psiFile, fileChanged);
+                summaries = new ArrayList<>();
                 view.updateModel(summaries);
                 if (activate) {
                     toolWindow.activate(null);
@@ -208,21 +208,7 @@ public class SummaryService {
      */
     private FileStatisticsBuilder visitMethods(PsiFile psiFile, FileStatisticsBuilder builder) {
 
-        PsiClass[] classes = ((PsiJavaFile) psiFile).getClasses();
-        for (PsiClass psiClass: classes) {
-
-            PsiMethod[] methods = psiClass.getMethods();
-            for (PsiMethod method: methods) {
-
-                MethodStatistics methodStatistics = new MethodStatistics(method);
-                method.accept(new JavaRecursiveMethodVisitor(methodStatistics));
-                builder.addMethod(methodStatistics);
-            }
-        }
-        // calculate average complexity
-        if (builder.getTotalMethods() > 0) {
-            return builder.calculateAverageComplexity();
-        }
         return builder;
     }
 }
+
