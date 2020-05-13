@@ -34,6 +34,6 @@
 
 [link to a file](src/main/java/actions/FileStatistics.java)
 
-[link to a file](src/main/java/data/LinkStatistics.java)
+[link to a file](src/main/java/actions/LinkStatistics.java)
 
 [link to a file](src/main/java/service/DataAggregator.java)
