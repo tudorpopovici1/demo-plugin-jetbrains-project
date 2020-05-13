@@ -32,12 +32,12 @@
 
 [link to file](build.gradle)
 
-[link to a file](src/main/java/actions/FileStatistics.java)
+[link to a file](src/main/java/service/FileStatistics.java)
 
 [link to a file](src/main/java/data/LinkStatistics.java)
 
 [link to a file](src/main/java/data/DataAggregator.java)
 
-[link to a file](src/main/java/actions/MDStatistics.java)
+[link to a file](src/main/java/data/MDStatistics.java)
 
-[link to a file](src/new_file.txt)
+[link to a file](src/main/java/data/new_file.txt)
