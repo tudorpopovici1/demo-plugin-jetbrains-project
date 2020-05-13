@@ -39,3 +39,5 @@
 [link to a file](src/main/java/data/DataAggregator.java)
 
 [link to a file](src/main/java/actions/MDStatistics.java)
+
+[link to a file](src/new_file.txt)
