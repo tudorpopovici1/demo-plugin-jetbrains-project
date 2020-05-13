@@ -1,4 +1,4 @@
-package data;
+package service;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiModifier;
@@ -6,6 +6,7 @@ import com.intellij.psi.PsiModifierList;
 import com.intellij.psi.PsiType;
 import com.intellij.util.xmlb.annotations.Transient;
 import com.sun.istack.NotNull;
+import data.MethodStatistics;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -41,6 +42,7 @@ public class FileStatistics {
 
         public FileStatisticsBuilder withNewFileLength(int fileLength) {
             this.newFileLength = fileLength;
+            System.out.println("ok");
             return this;
         }
 
