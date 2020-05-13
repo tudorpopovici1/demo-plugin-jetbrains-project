@@ -25,9 +25,11 @@
 * [Ceren Ugurlu](https://github.com/cugurlu)
 * [Irem Ugurlu](https://github.com/iremugurlu)
 
-[link to file](src/main/java/data/SummaryData.java)
+[link to file](src/main/java/SummaryData.java)
 
 [link text itself]: http://www.reddit.com
 [link text][link text itself]
 
+[link to file](build.gradle)
 
+[link to a file](src/main/java/data/FileStatistics.java)
