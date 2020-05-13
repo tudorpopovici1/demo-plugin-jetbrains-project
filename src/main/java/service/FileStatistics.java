@@ -1,4 +1,4 @@
-package actions;
+package service;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiModifier;
