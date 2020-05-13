@@ -40,4 +40,6 @@
 
 [link to a file](src/main/java/data/MDStatistics.java)
 
-[link to a file](src/main/java/data/new_file.txt)
+[link to a file](src/main/java/service/new_file.txt)
+
+[link to a file](src/main/java/service/FileStatistics.java)
