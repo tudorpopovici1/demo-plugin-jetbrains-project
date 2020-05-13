@@ -1,8 +1,8 @@
-package util;
+package data;
 
 import com.intellij.openapi.project.Project;
-import data.FileStatistics;
-import data.FileStatistics.FileStatisticsBuilder;
+import service.FileStatistics;
+import service.FileStatistics.FileStatisticsBuilder;
 import service.FileStatisticsService;
 
 import java.util.List;
