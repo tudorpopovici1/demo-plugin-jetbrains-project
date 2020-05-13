@@ -16,7 +16,7 @@
 
 [1]: https://www.jetbrains.com
 
-![Image of Tools Menu](images/image1.png)<br/><br/>
+![Image of Tools Menu](src/main/images/image1.png)<br/><br/>
 
 ![Image of Statistics](images/image2.png)
 
@@ -25,6 +25,6 @@
 * [Ceren Ugurlu](https://github.com/cugurlu)
 * [Irem Ugurlu](https://github.com/iremugurlu)
 
-[link to file](src/main/java/actions/GitTracker.java)
+[link to file](src/main/java/actions/MarkdownAction.java)
 
 
