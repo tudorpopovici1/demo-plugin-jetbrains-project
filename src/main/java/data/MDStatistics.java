@@ -1,6 +1,5 @@
-package actions;
+package data;
 
-import data.LinkStatistics;
 import util.LinkStatistics;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import com.intellij.openapi.diagnostic.Logger;
