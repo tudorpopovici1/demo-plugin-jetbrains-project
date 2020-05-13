@@ -32,7 +32,7 @@
 
 [link to file](build.gradle)
 
-[link to a file](src/main/java/data/FileStatistics.java)
+[link to a file](src/main/java/actions/FileStatistics.java)
 
 [link to a file](src/main/java/data/LinkStatistics.java)
 
@@ -42,4 +42,4 @@
 
 [link to a file](src/main/java/service/new_file.txt)
 
-[link to a file](src/main/java/data/FileStatistics.java)
+[link to a file](src/main/java/actions/FileStatistics.java)
