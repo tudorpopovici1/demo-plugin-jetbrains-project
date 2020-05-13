@@ -31,15 +31,15 @@
 [link text][link text itself]
 
 [link to file](build.gradle)
-
-[link to a file](src/main/java/service/FileStatistics.java)
+ 
+[link to a file](src/main/java/view/FileStatistics.java)     
 
 [link to a file](src/main/java/data/LinkStatistics.java)
 
 [link to a file](src/main/java/data/DataAggregator.java)
-
+ 
 [link to a file](src/main/java/data/MDStatistics.java)
 
 [link to a file](src/main/java/service/new_file.txt)
 
-[link to a file](src/main/java/service/FileStatistics.java)
+[link to a file](src/main/java/view/FileStatistics.java)  
