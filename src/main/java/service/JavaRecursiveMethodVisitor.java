@@ -1,4 +1,4 @@
-package actions;
+package service;
 
 import com.intellij.psi.*;
 import com.intellij.psi.tree.TokenSet;
