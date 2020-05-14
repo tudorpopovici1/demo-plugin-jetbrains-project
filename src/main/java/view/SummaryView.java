@@ -2,7 +2,7 @@ package view;
 
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
-import data.SummaryData;
+import SummaryData;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
