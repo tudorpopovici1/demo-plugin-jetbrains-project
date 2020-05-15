@@ -1,4 +1,4 @@
-package actions;
+package data;
 
 import service.LinkStatistics;
 import util.LinkStatistics;
