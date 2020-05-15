@@ -1,7 +1,7 @@
-package data;
+package view;
 
-import com.intellij.openapi.project.Project;
 import service.FileStatistics;
+import com.intellij.openapi.project.Project;
 import service.FileStatistics.FileStatisticsBuilder;
 import service.FileStatisticsService;
 
