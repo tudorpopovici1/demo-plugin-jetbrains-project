@@ -10,4 +10,4 @@
 
 [link to a file](src/main/java/util/plugin.xml)   
 
-[link to a file](src/main/java/data/MDStatistics.java)  
+[link to a file](src/main/java/actions/MDStatistics.java) 
