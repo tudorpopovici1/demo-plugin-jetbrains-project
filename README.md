@@ -10,4 +10,4 @@
 
 [link to a file](src/main/java/util/SummaryView.java)      
 
-[link to a file](src/main/java/data/DataAggregator.java)   
+[link to a file](src/main/java/actions/DataAggregator.java)    
