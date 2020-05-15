@@ -1,3 +1,3 @@
 
 
-[link to a file](src/main/resources/icons/my_file.txt)
+[link to a file](src/main/java/data/my_file.txt)
