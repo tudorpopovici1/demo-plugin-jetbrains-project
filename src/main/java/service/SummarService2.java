@@ -17,6 +17,7 @@ import com.intellij.psi.*;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.util.messages.MessageBusConnection;
+import actions.DataAggregator;
 import service.FileStatistics.FileStatisticsBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
