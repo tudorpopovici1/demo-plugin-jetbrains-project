@@ -1,4 +1,4 @@
-package view;
+package util;
 
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;

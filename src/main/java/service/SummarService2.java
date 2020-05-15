@@ -20,8 +20,7 @@ import com.intellij.util.messages.MessageBusConnection;
 import service.FileStatistics.FileStatisticsBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import util.DataAggregator;
-import view.SummaryView;
+import util.SummaryView;
 
 import java.util.ArrayList;
 import java.util.Objects;

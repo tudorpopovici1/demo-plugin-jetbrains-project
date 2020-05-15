@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import util.DataConverter;
 import view.MDView;
-import view.SummaryView;
+import util.SummaryView;
 
 import java.util.*;
 
