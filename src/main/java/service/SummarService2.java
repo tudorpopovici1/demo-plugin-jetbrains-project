@@ -51,7 +51,7 @@ public class SummaryService {
         ToolWindow toolWindow = toolWindowManager.registerToolWindow(
                 "Statistics", false, ToolWindowAnchor.BOTTOM);
 
-        toolWindow.setIcon(IconLoader.getIcon("/icons/icon.png"));
+        toolWindow.setIcon(IconLoader.getIcon("/icon.png"));
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(view, null, true);
         toolWindow.getContentManager().addContent(content);

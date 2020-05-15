@@ -1,4 +1,4 @@
-package actions;
+package service;
 
 public class LinkStatistics {
 

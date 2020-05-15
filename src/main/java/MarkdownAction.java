@@ -1,5 +1,3 @@
-package data;
-
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
@@ -50,7 +48,7 @@ public class MarkdownAction extends AnAction {
      */
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-
+        System.out.println("something changed?");
         // Get project, return warning message if no project open.
         Project currentProject = event.getProject();
         if (currentProject == null) {

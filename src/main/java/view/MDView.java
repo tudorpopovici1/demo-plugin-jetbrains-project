@@ -2,7 +2,7 @@ package view;
 
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.treeStructure.Tree;
-import data.LinkStatistics;
+import util.LinkStatistics;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

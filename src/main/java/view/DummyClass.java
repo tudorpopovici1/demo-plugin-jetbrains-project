@@ -1,4 +1,4 @@
-package actions;
+package view;
 
 public class DummyClass {
 }
