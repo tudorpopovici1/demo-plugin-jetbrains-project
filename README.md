@@ -10,4 +10,6 @@
 
 [link to a file](src/main/java/util/plugin.xml)   
 
-[link to a file](src/main/java/actions/MDStatistics.java) 
+[link to a file](src/main/java/MarkdownAction.java) 
+
+[link to a file](src/main/java/actions/DummyClass.java)
