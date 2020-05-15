@@ -1,4 +1,4 @@
-package service;
+package data;
 
 import service.FileStatistics;
 import com.intellij.openapi.project.Project;
