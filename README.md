@@ -49,4 +49,4 @@
 
 [link to a file](src/main/java/data/MethodAction.java)
 
-[link to a file](src/my_file.txt)
+[link to a file](src/main/resources/my_file.txt)
