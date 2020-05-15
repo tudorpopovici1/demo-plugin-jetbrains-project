@@ -1,5 +1,3 @@
-package data;
-
 /**
  * Data class
  */

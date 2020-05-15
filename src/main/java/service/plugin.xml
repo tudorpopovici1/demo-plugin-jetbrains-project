@@ -25,7 +25,7 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control alt G" replace-all="true"/>
             <mouse-shortcut keymap="$default" keystroke="control button3 doubleClick"/>
         </action>
-        <action id="MarkdownSummary" class="data.MarkdownAction" text="Markdown Files Report" description="Run markdown files summary report">
+        <action id="MarkdownSummary" class="MarkdownAction" text="Markdown Files Report" description="Run markdown files summary report">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="control alt F"/>
             <!-- Except to the "Mac OS X" keymap and its children -->
