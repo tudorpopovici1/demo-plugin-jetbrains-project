@@ -1,3 +1,3 @@
 
 
-[link to a file](src/main/resources/icons/new.txt)
+[link to a file](src/main/resources/icons/my_file.txt)
