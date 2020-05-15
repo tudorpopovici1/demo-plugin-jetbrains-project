@@ -16,7 +16,7 @@
 
 
     <actions>
-        <action id="MethodSummary" class="actions.MethodAction" text="Summary Report" description="Run method summary report">
+        <action id="MethodSummary" class="view.MethodAction" text="Summary Report" description="Run method summary report">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="control alt G"/>
             <!-- Except to the "Mac OS X" keymap and its children -->
@@ -25,7 +25,7 @@
             <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="control alt G" replace-all="true"/>
             <mouse-shortcut keymap="$default" keystroke="control button3 doubleClick"/>
         </action>
-        <action id="MarkdownSummary" class="actions.MarkdownAction" text="Markdown Files Report" description="Run markdown files summary report">
+        <action id="MarkdownSummary" class="data.MarkdownAction" text="Markdown Files Report" description="Run markdown files summary report">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
             <keyboard-shortcut keymap="$default" first-keystroke="control alt F"/>
             <!-- Except to the "Mac OS X" keymap and its children -->
