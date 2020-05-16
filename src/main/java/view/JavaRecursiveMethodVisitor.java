@@ -1,3 +1,5 @@
+package view;
+
 import com.intellij.psi.*;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
