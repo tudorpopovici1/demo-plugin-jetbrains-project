@@ -1,4 +1,4 @@
-package actions;
+package view;
 
 import service.FileStatistics;
 import com.intellij.openapi.project.Project;
@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author Tudor Popovici
  *
- * DataAggregator has the responsibility of retrieving all previous information for a file from disk, and creating new statistics based on this data,
+ * view.DataAggregator has the responsibility of retrieving all previous information for a file from disk, and creating new statistics based on this data,
  * as well as compare this previous data to the current data.
  */
 
