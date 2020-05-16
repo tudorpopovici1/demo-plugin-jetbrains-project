@@ -1,9 +1,9 @@
-package service;
+package util;
 
 import com.intellij.psi.*;
 import com.intellij.psi.tree.TokenSet;
 import com.intellij.psi.util.PsiTreeUtil;
-import data.MethodStatistics;
+import util.MethodStatistics;
 
 /**
  * @author Tommaso Brandirali
