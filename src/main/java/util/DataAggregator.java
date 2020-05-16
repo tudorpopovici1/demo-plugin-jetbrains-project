@@ -1,4 +1,4 @@
-package service;
+package util;
 
 public class DataAggregator {
 }
