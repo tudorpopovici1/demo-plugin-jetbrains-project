@@ -12,17 +12,23 @@ repositories {
     mavenCentral()
 }
 
+// add new lines
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+//here
+
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version '2019.1.1'
-    plugins 'org.intellij.plugins.markdown:191.5849.16'
 }
 patchPluginXml {
     changeNotes """
       Add change notes here.<br>
       <em>most HTML tags may be used</em>"""
 }
+
+
+// and here
