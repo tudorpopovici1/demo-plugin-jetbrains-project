@@ -1,4 +1,4 @@
-[build.gradle](build.gradle#L25)
+[build.gradle](build.gradle#L29)
 
 https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blob/master/src/main/images/image1.png
 
