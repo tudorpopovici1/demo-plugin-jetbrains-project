@@ -2,6 +2,8 @@
 
 [build.gradle](build.gradle#L36)
 
+[link to line](build.gradle#L18)
+
 https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blob/master/src/main/images/image1.png
 
 links is <https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blob/master/src/main/images/image1.png> right here
