@@ -26,7 +26,7 @@ dependencies {
 // here is a new thingy
 
 
-// See https://github.com/JetBrains/gradle-intellij-plugin/
+// See https://github.com/JetBrains/gradle-lij-plugin/
 intellij {
     version '2019.1.1'
 }
