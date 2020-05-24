@@ -1,13 +1,23 @@
-[link to a file](src/test/java/track2.txt)              
+[build.gradle](build.gradle#L25)
 
-[link to a file](src/test/java/track2.txt)            
+https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blob/master/src/main/images/image1.png
 
-[link to a file](src/main/resources/icons/new_dir)
+links is <https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blob/master/src/main/images/image1.png> right here
 
-[link to a file](src/main/java/service/icon.png)   
+this one is a link [link to web](https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blob/master/src/main/images/image1.png)     
 
-[link to a file](does_not_exist.txt)   
+this one is also a link [link to web](https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blob/does-not-exist/images/image1.png)     
 
-[link to a file](src/main/java/util/SummaryView.java)      
+[link to web](https://github.com/tudorpopovici1/Green-beam/blob/master/design)     
 
-[link to a file](src/main/java/actions/DataAggregator.java)    
+
+[link to 1][1]
+
+[link to file](src/main/images/image1.png)
+
+build.gradle
+
+[link to 2]
+
+[1]: https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blob/master/src/main/images/image1.png
+[2]: src/main/images/image1.png
