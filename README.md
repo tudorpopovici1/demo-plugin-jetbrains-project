@@ -1,5 +1,7 @@
 [build.gradle](build.gradle#L29)
 
+[build.gradle](build.gradle#L36)
+
 https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blob/master/src/main/images/image1.png
 
 links is <https://github.com/tudorpopovici1/demo-plugin-jetbrains-project/blob/master/src/main/images/image1.png> right here
