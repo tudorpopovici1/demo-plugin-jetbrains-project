@@ -18,6 +18,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+// See https://github.com/JetBrains/gradle-lij-plugin/
 
 
 
@@ -29,7 +30,6 @@ dependencies {
 
 
 
-// See https://github.com/JetBrains/gradle-lij-plugin/
 intellij {
     version '2019.1.1'
 }
