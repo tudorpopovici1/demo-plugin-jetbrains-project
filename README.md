@@ -15,7 +15,8 @@
 <https://github.com/tudorpopovici1/Green-beam/tree/master/design>
 
 
-[another link](src\main\images\image1.png)
+[another link1](src/main/images/image1.png)
+[another link2](src\main\images\image1.png)
 
 
 <https://github.com/tudorpopovici1/demo-plugin-jetbrains-project2/blob/master/src/main/images/image1.png>
